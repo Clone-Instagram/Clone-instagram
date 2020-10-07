@@ -69,9 +69,17 @@
                 commentList.dataset.id = commentAxiosData[i].id;
                 commentList.dataset.post_id = commentAxiosData[i].post_id
                 const resultDate = commentAxiosData[i].upload_date.split('T');
+                let hour
+                if(new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[3].startsWith('오후')){
+                    hour = (parseInt(new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0])+12).toString()
+                } else {
+                    hour = (new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0]).toString()
+                }
                 resultDate[1] = new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4]
-                const result = resultDate.join('T')
-                commentList.dataset.date = result
+                const result = [hour, resultDate[1].split(':')[1],resultDate[1].split(':')[2]]
+                resultDate[1] = result.join(':');
+                const date = resultDate.join('T')
+                commentList.dataset.date = date
 
                 // 댓글삭제 끝
                 commentImage.className = 'right-feed-image';
