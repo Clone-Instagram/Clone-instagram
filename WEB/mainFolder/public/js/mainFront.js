@@ -454,7 +454,6 @@ async function operateFollowing() {
 }
 async function setFriendData() {
   if(friendData[0].length !== 0){
-
     const sideSticker = document.querySelector('.side-sticker');
     for(const name in friendData[0]) {
       const rightHTML = await fetch('../lib/rightFriend');
@@ -467,6 +466,7 @@ async function setFriendData() {
     const data = friendData[0]
     const nickname = await axios.post('/nickData', data);
     const nicknameData = await nickname.data;
+    console.log(friendData[0]);
     for(const name in friendData[0]){
       sideUserImage[x].children[0].children[0].style.backgroundImage = `url('../data/${name}/1.jpg')`;
       recommendInfo[x].children[0].innerHTML = nicknameData[x];

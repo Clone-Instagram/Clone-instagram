@@ -443,6 +443,7 @@ app.post('/delete_process', (req, res, next) => {
     });
   });
 });
+
 app.post('/new_delete', (req, res, next)=>{
   const post = req.body;
   db.query(`delete from post where post_id = ${post.id}`, async (err1, data1) => {
