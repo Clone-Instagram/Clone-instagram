@@ -42,6 +42,7 @@
         if (feedItem) {
             const commentAxios = await axios.post('/feed_comment_data', { postID: feedItem.dataset.post_id })
             const commentAxiosData = await commentAxios.data;
+            console.log(commentAxiosData)
             const likesAxios = await axios.post('/feed_like_process', {postID: feedItem.dataset.post_id});
             const likesAxiosData = await likesAxios.data;
             console.log(likesAxiosData)
@@ -61,6 +62,18 @@
                 const commentContent = document.createElement('p');
                 const commentDate = document.createElement('span');
                 commentList.className = 'right-feed-items';
+                // 댓글삭제 추가
+                const deleteButton = document.createElement('p');
+                deleteButton.className='comment-delete-button'
+                deleteButton.innerHTML='삭제'
+                commentList.dataset.id = commentAxiosData[i].id;
+                commentList.dataset.post_id = commentAxiosData[i].post_id
+                const resultDate = commentAxiosData[i].upload_date.split('T');
+                resultDate[1] = new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4]
+                const result = resultDate.join('T')
+                commentList.dataset.date = result
+
+                // 댓글삭제 끝
                 commentImage.className = 'right-feed-image';
                 commentNickname.className = 'right-feed-nickname';
                 commentContent.className = 'right-feed-comment';
@@ -73,7 +86,10 @@
                 commentList.appendChild(commentNickname);
                 commentList.appendChild(commentDate);
                 commentList.appendChild(commentContent);
+                commentList.appendChild(deleteButton);
+
                 rightFeedList.appendChild(commentList);
+                
             }
             rightFeedHeader.children[0].style.backgroundImage = `url('../data/${searchAxiosData.post[feedItem.dataset.number].id}/1.jpg')`
             rightFeedHeader.children[1].innerHTML = feedItem.dataset.nickname;
@@ -107,6 +123,16 @@
         const slideBox = getTarget(e.target, 'feed-slide-container');
         const rightBox = getTarget(e.target, 'feed-post-right-section');
         const commentButton = getTarget(e.target, 'right-feed-bottom-submit');
+        // 댓글삭제 추가
+        const commentDeleteButton = getTarget(e.target, 'comment-delete-button');
+        if(commentDeleteButton) {
+            console.log(commentDeleteButton)
+            const postId = hiddenPostID.value;
+            const date = commentDeleteButton.parentNode.dataset.date
+            await axios.post('/new_delete_comment', {postId, date});
+            commentDeleteButton.parentNode.remove();
+        }
+        // 댓글삭제 끝
         const likeButton = getTarget(e.target, 'like-btn');
         if (likeButton) {
             if (likeButton.getAttribute('fill') == '#262626') {
@@ -133,14 +159,25 @@
                 let year = today.getFullYear(); // 년도
                 let month = today.getMonth() + 1;  // 월
                 let date = today.getDate();
+                // 댓글삭제 추가부분
+                const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+                const timezoneDate = new Date(Date.now() - timezoneOffset);
+                const dbDate = timezoneDate.toISOString().slice(0, 19)
+                // 댓글삭제 끝
                 const postID = hiddenPostID.value;
                 const comment_content = commentButton.previousElementSibling.value;
                 const submitComment = await axios.post('/feed_insert_comment', { postID, comment_content })
                 const commentList = document.createElement('li');
+                //댓글삭제 추가부분
+                commentList.dataset.id = searchAxiosData.id;
+                commentList.dataset.post_id = hiddenPostID.value;
+                commentList.dataset.date = dbDate;
                 const commentImage = document.createElement('a');
                 const commentNickname = document.createElement('p');
                 const commentContent = document.createElement('p');
                 const commentDate = document.createElement('span');
+                const deleteButton = document.createElement('p');
+                deleteButton.className = 'comment-delete-button'
                 commentList.className = 'right-feed-items';
                 commentImage.className = 'right-feed-image';
                 commentNickname.className = 'right-feed-nickname';
@@ -150,10 +187,13 @@
                 commentImage.style.backgroundImage = `url('../data/${searchAxiosData.id}/1.jpg')`;
                 commentNickname.innerHTML = searchAxiosData.nickname;
                 commentContent.innerHTML = commentButton.previousElementSibling.value;
+                deleteButton.innerHTML = '삭제'
+
                 commentList.appendChild(commentImage);
                 commentList.appendChild(commentNickname);
                 commentList.appendChild(commentDate);
                 commentList.appendChild(commentContent);
+                commentList.appendChild(deleteButton);
                 rightFeedList.appendChild(commentList);
                 commentButton.previousElementSibling.value = null;
             }
@@ -196,6 +236,36 @@
         // 댓글입력
 
     })
+    // 댓글삭제 시작 (searchAxios를 각자의 데이터에 맞게 설정)
+    /**
+     * .right-feed-comment {width:80%} -> 수정
+     *  .comment-delete-button {
+            font-size: 0.8rem;
+            color: #bbb;
+            cursor: pointer;
+        } -> 추가
+     */  
+
+    feedPostModalContainer.addEventListener('mouseover', (e)=>{
+        let commentItems;
+        if(e.target.className == 'right-feed-items') commentItems = e.target;
+        if(commentItems) {
+            if(commentItems.dataset.id === searchAxiosData.id) {
+                commentItems.children[4].style.display="inline"
+            }
+        }
+    })
+    feedPostModalContainer.addEventListener('mouseout', (e)=>{
+        let commentItems;
+        if(e.target.className == 'right-feed-items') commentItems = e.target;
+        if(commentItems) {
+            if(commentItems.dataset.id === searchAxiosData.id) {
+                commentItems.children[4].style.display="none"
+            }
+        }
+    })
+    // 댓글삭제 끝
+
     window.addEventListener('resize', () => {
         feedSlideListWidth = feedSlideContainer.clientWidth * feedSlideItems.length;
         feedSlideList.style.width = `${feedSlideListWidth}px`
