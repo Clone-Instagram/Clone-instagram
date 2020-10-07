@@ -2,17 +2,7 @@
     const userId = await axios.post('/signup_get_id');
     const userIdData = await userId.data;
     console.log(userIdData);
-    // const getTarget = (elem, name) => {
-    //     while (!elem.name==name) {
-    //         console.log(elem.name)
-    //         elem = elem.parentNode;
-    //         if (elem.nodeName == 'BODY') {
-    //             elem = null;
-    //             return;
-    //         }
-    //     }
-    //     return elem;
-    // }
+
     const signupBox = document.querySelector('.signup-box');
     const toastMessage = document.querySelector('.toast-message');
     const submit = document.querySelector('.submit')
@@ -39,9 +29,9 @@
             for(let i=0; i<userIdData.length; i++){
                 if(userIdData[i].id == id.value) idIsOverlap = true;
             }
-            if(id.value.length < 8){
+            if(id.value.length < 6){
                 id.style.border = '2px solid #ff3333'
-                toastMessage.innerHTML = '8자 이상 입력해주세요.'
+                toastMessage.innerHTML = '6자 이상 입력해주세요.'
                 toastMessage.style.opacity = '1'
                 isAble.id = false;
 
@@ -114,5 +104,4 @@
             submit.style.backgroundColor= 'rgb(186, 216, 247)';
         }
     })
-
 })()
