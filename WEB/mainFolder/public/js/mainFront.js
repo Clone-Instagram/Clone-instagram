@@ -407,30 +407,6 @@
       }
       likeCount = 0;
     }
-<<<<<<< HEAD
-  })
-}
-async function setFriendData() {
-  if(friendData[0].length !== 0){
-    const sideSticker = document.querySelector('.side-sticker');
-    for(const name in friendData[0]) {
-      const rightHTML = await fetch('../lib/rightFriend');
-      const rightHTMLCotent = await rightHTML.text();
-      sideSticker.innerHTML += rightHTMLCotent;
-    }
-    let x = 0;
-    const recommendInfo = document.querySelectorAll('.recommend_info');
-    const sideUserImage = document.querySelectorAll('.side_user_img_recommend');
-    const data = friendData[0]
-    const nickname = await axios.post('/nickData', data);
-    const nicknameData = await nickname.data;
-    console.log(friendData[0]);
-    for(const name in friendData[0]){
-      sideUserImage[x].children[0].children[0].style.backgroundImage = `url('../data/${name}/1.jpg')`;
-      recommendInfo[x].children[0].innerHTML = nicknameData[x];
-      recommendInfo[x].children[1].innerHTML = name;
-      x++;
-=======
     for (let i = 0; i < postWhole.length; i++) {
       
       likePeople[i] = postWhole[i].children[2].children[0].children[1];
@@ -463,7 +439,6 @@ async function setFriendData() {
         elem = null;
         return;
       }
->>>>>>> master
     }
     return elem;
   }

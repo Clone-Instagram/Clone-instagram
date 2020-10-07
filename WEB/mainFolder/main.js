@@ -148,18 +148,6 @@
       });
     });
   });
-<<<<<<< HEAD
-});
-
-app.post('/feed_like_process', (req, res) => {
-  const postID = req.body;
-  db.query(`select * from post_likes where likes_id ='${req.session.idname}' and post_id = ${postID.postID} order by post_id desc`, (err1, data1) => {
-    if (err1) next(new Error('좋아요 불러오기 실패'));
-    db.query(`select * from post_likes where post_id = ${postID.postID} order by post_id desc`, (err2, data2) => {
-      const data = { data1, data2 };
-      if (err2) next(new Error('좋아요 불러오기 실패'));
-      return res.end(JSON.stringify(data));
-=======
   app.post('/feed_like_process', (req, res) => {
     const postID = req.body;
     db.query(`select * from post_likes where likes_id ='${req.session.idname}' and post_id = ${postID.postID} order by post_id desc`, (err1, data1) => {
@@ -169,7 +157,6 @@ app.post('/feed_like_process', (req, res) => {
         if (err2) next(new Error('좋아요 불러오기 실패'));
         return res.end(JSON.stringify(data));
       });
->>>>>>> master
     });
   });
   app.get('/search_data', async (req, res, next) => {
@@ -455,26 +442,6 @@ app.post('/feed_like_process', (req, res) => {
       });
     });
   });
-<<<<<<< HEAD
-});
-
-app.post('/new_delete', (req, res, next)=>{
-  const post = req.body;
-  db.query(`delete from post where post_id = ${post.id}`, async (err1, data1) => {
-    if (err1) next(new Error('삭제 실패'));
-    db.query(`delete from post_content where post_id = ${post.id}`, async (err2, data2) => {
-      if (err2) next(new Error('삭제 실패'));
-      db.query(`delete from post_comment where post_id = ${post.id}`, async (err3, data3) => {
-        if (err3) next(new Error('삭제 실패'));
-        db.query(`delete from post_likes where post_id = ${post.id}`, async (err4, data4) => {
-          if (err4) next(new Error('삭제 실패'));
-          const filename = await fs.readdir(`./public/data/${post.id}`);
-          for (let i = 0; i < filename.length; i++) {
-            await fs.unlink(`./public/data/${post.id}/${filename[i]}`);
-          }
-          await fs.rmdir(`./public/data/${post.id}`)
-          return res.end();
-=======
   app.post('/new_delete', (req, res, next)=>{
     const post = req.body;
     db.query(`delete from post where post_id = ${post.id}`, async (err1, data1) => {
@@ -492,7 +459,6 @@ app.post('/new_delete', (req, res, next)=>{
             await fs.rmdir(`./public/data/${post.id}`)
             return res.end();
           });
->>>>>>> master
         });
       });
     });
@@ -645,16 +611,6 @@ app.get('/feed_recommend', async(req, res) => {
       return res.end();
     })
   })
-<<<<<<< HEAD
-})
-// 댓글삭제 끝
-//피드추천 끝
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.redirect('/error');
-})
-app.listen(4001, () => console.log('4001 포트 대기'))
-=======
   app.post('/feed_comment_data', async (req, res, next)=>{
     const post = req.body;
     db.query(`select * from post_comment where post_id = ${post.postID} order by upload_date asc`, (err, data) => {
@@ -677,7 +633,4 @@ app.listen(4001, () => console.log('4001 포트 대기'))
     console.log(err);
     res.redirect('/error');
   })
-  app.listen(3030, () => console.log('3030 포트 대기'))
-
-  
->>>>>>> master
+  app.listen(4001, () => console.log('4001 포트 대기'))
