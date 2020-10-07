@@ -213,7 +213,6 @@
       }
     });
   });
-  
   // 회원가입 라우터
   app.post('/signup_get_id', (req, res, next)=>{
     db.query('select id, nickname from user', (err, data)=>{
@@ -260,7 +259,6 @@
   app.post('/insert', async (req, res, next) => {
     try {
       fs2.readdirSync(`./public/data/${req.postImageLink}`);
-      
     } catch (error) {
       console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
       fs2.mkdirSync(`./public/data/${req.postImageLink}`);
