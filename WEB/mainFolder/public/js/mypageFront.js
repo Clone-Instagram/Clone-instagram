@@ -65,9 +65,23 @@
     return elem;
   }
 
-  // 회원 탈퇴
+  const followercancelModalHandler = (e) => {
+    if (e.target.className === `mypage-follower-modalcontainer`) {
+      mypageFollowerModalcontainer.style.display = `none`;
+      // console.log(123)
+    }
+  }
+  const mypageFollowerModalcontainer = document.querySelector('.mypage-follower-modalcontainer');
+  const followerList = document.querySelector('.follower-list');
   myPageHeader.addEventListener('click', async(e)=>{
     const userSecession = getTarget(e.target, 'user-secession')
+    const mypageFollower = getTarget(e.target, 'mypage-follower');
+    const mypageFollow = getTarget(e.target, 'mypage-follow');
+
+    let followerIndex = 0;
+    let followerHTML = await fetch('../lib/followerlist');
+    let followerText = await followerHTML.text();
+    // 회원 탈퇴
     if(userSecession) {
       const password = window.prompt('비밀번호를 입력해주세요(확인 시 바로 탈퇴됩니다.)');
       const isTrue = await axios.post('/is_user', {password})
@@ -79,51 +93,36 @@
       } else {
         alert('비밀번호가 틀렸습니다.')
       }
-    }
-  })
-
-  const mypageFollowerModalcontainer = document.querySelector('.mypage-follower-modalcontainer');
-  const mypageListBtns = document.querySelector('.user2');
-  let followerIndex = 0;
-  const followercancelModalHandler = (e) => {
-    if (e.target.className === `mypage-follower-modalcontainer`) {
-      mypageFollowerModalcontainer.style.display = `none`;
-      // console.log(123)
-    }
-  }
-  mypageListBtns.addEventListener('click', async (e)=> {
-    const mypageFollower = getTarget(e.target, 'mypage-follower');
-    const mypageFollowerModalContainer = getTarget(e.target, 'mypage-follower-modalcontainer');
-    let followerHTML = await fetch('../lib/followerlist');
-    let followerText = await followerHTML.text();
-    // console.log(followerText);
-    if(mypageFollower) {
+      // 팔로워 리스트
+    } else if(mypageFollower) {
+      console.log(e.target);
       mypageFollowerModalcontainer.style.display = `flex`;
+      // console.log(followerAxiosData);
       for(let i=0; i<followerAxiosData.length; i++) {
         mypageFollowerList.innerHTML += followerText;
         console.log(followerAxiosData);
-        mypageFollowerList.children[followerIndex].children[0].style.backgroundImage= `url('../data/${followerAxiosData[i].id}/1.jpg')`;
-        mypageFollowerList.children[followerIndex].children[1].children[0].innerHTML = 'nick';
+        mypageFollowerList.children[followerIndex].children[0].style.backgroundImage = `url('../data/${followerAxiosData[i].id}/1.jpg')`;
+        mypageFollowerList.children[followerIndex].children[1].children[0].innerHTML = followerAxiosData[i].nickname;
         mypageFollowerList.children[followerIndex].children[1].children[1].innerHTML = followerAxiosData[i].id;
         mypageFollowerList.children[followerIndex].children[2].children[0].innerHTML = '팔로잉';
         followerIndex++;
       }
-    } else if(mypageFollowerModalContainer) {
-
-    }
+      // 팔로우 리스트
+    } else if(mypageFollow) {
+      mypageFollowerModalcontainer.style.display = `flex`;
+      for(let i=0; i<followAxiosData.length; i++) {
+        mypageFollowerList.innerHTML += followerText;
+        console.log(followAxiosData);
+        mypageFollowerList.children[followerIndex].children[0].style.backgroundImage = `url('../data/${followAxiosData[i].id}/1.jpg')`;
+        mypageFollowerList.children[followerIndex].children[1].children[0].innerHTML = followAxiosData[i].nickname;
+        mypageFollowerList.children[followerIndex].children[1].children[1].innerHTML = followAxiosData[i].following_id;
+        mypageFollowerList.children[followerIndex].children[2].children[0].innerHTML = '팔로잉';
+        followerIndex++;
+      }
+    } 
   })
-
-  mypageFollowerModalcontainer.addEventListener('click', followercancelModalHandler);
   
-
-  // if (feedItem.dataset.post_id == commentAxiosData[j].post_id) {
-  //   rightFeedList.innerHTML += commentText;
-  //   rightFeedList.children[commentIndex].children[0].style.backgroundImage = `url('../data/${commentAxiosData[j].id}/1.jpg')`;
-  //   rightFeedList.children[commentIndex].children[1].innerHTML = commentAxiosData[j].nickname;
-  //   rightFeedList.children[commentIndex].children[2].innerHTML = commentAxiosData[j].upload_date.split('T')[0];
-  //   rightFeedList.children[commentIndex].children[3].innerHTML = commentAxiosData[j].comment;
-  //   commentIndex++;
-  // };
+  mypageFollowerModalcontainer.addEventListener('click', followercancelModalHandler);
 
   // 게시글 클릭시 동적으로 이미지 개수 만큼 li 생성
   feedList.addEventListener('click', async(e)=>{
