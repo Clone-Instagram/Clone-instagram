@@ -1,3 +1,6 @@
+html{
+  font-family: 'Noto Sans KR', sans-serif;
+}
 body{
   width: 98vw;
   height: 100vh;
@@ -341,6 +344,7 @@ body{
     width: 18rem;
   }
 }
+
 /*팔로워 리스트*/
 .mypage-follower-modalcontainer {
   z-index :20;
@@ -363,10 +367,35 @@ body{
   /* justify-content: center; */
 }
 .follower-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
   font-family: 'Noto Sans KR', sans-serif;
   width: 28rem;
   height: 3.3rem;
   font-size: 1rem;
   font-weight: 200;
   border-bottom: 0.5px solid #ddd;
+}
+.follower-list:nth-last-child(1){
+  border-bottom: 0;
+}
+.post-length {
+  font-weight: bold;
+}
+.follower-length{
+  font-weight: bold;
+}
+.follow-length{
+  font-weight: bold;
+}
+
+.follower_img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }

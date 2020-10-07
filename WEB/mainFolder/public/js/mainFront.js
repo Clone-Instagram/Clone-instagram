@@ -90,6 +90,7 @@
   async function createSlideImage() {
     const postWhole = document.querySelectorAll('.post-whole')
     let img_index = Object.keys(mainAxiosImages).length - 1;
+    console.log(mainAxiosImages);
     for (const imgList in mainAxiosImages) {
       for (let i = 0; i < mainAxiosImages[imgList].length; i++) {
         postWhole[img_index].children[1].firstElementChild.firstElementChild.children[i].style.backgroundImage = `url('../data/${imgList}/${mainAxiosImages[imgList][i]}')`;
@@ -477,6 +478,7 @@
       const data = friendData[0]
       const nickname = await axios.post('/nickData', data);
       const nicknameData = await nickname.data;
+      console.log(friendData[0]);
       for(const name in friendData[0]){
         sideUserImage[x].children[0].children[0].style.backgroundImage = `url('../data/${name}/1.jpg')`;
         recommendInfo[x].children[0].innerHTML = nicknameData[x];

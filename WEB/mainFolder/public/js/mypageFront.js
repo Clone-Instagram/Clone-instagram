@@ -95,20 +95,22 @@
     const mypageFollower = getTarget(e.target, 'mypage-follower');
     const mypageFollowerModalContainer = getTarget(e.target, 'mypage-follower-modalcontainer');
     let followerHTML = await fetch('../lib/followerlist');
-    let followerText = followerHTML.text();
+    let followerText = await followerHTML.text();
     // console.log(followerText);
     if(mypageFollower) {
       mypageFollowerModalcontainer.style.display = `flex`;
       for(let i=0; i<followerAxiosData.length; i++) {
         mypageFollowerList.innerHTML += followerText;
-        // mypageFollowerList.children[followerIndex].firstChild.style.backgroundImage = ;
-        // mypageFollowerList.children[followerIndex].children[1].children[0].innerHTML = nick;
-        // mypageFollowerList.children[followerIndex].children[1].children[1].innerHTML = name;
-        // mypageFollowerList.children[followerIndex].children[2].children[0].innerHTML = nick;
+        console.log(followerAxiosData);
+        mypageFollowerList.children[followerIndex].children[0].style.backgroundImage= `url('../data/${followerAxiosData[i].id}/1.jpg')`;
+        mypageFollowerList.children[followerIndex].children[1].children[0].innerHTML = 'nick';
+        mypageFollowerList.children[followerIndex].children[1].children[1].innerHTML = followerAxiosData[i].id;
+        mypageFollowerList.children[followerIndex].children[2].children[0].innerHTML = '팔로잉';
         followerIndex++;
-        
       }
-    } 
+    } else if(mypageFollowerModalContainer) {
+
+    }
   })
 
   mypageFollowerModalcontainer.addEventListener('click', followercancelModalHandler);
