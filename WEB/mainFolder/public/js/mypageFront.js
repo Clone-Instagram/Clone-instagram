@@ -26,9 +26,13 @@
   const profileImage = document.querySelector('.profileImage');
   const myPageHeader = document.querySelector('.my-page-header');
   const likeBtn = document.querySelector('.like-btn');
+  const mypageFollowerList = document.querySelector('.mypage-follower-list');
+  const mypageFollower = document.querySelector('.mypage-follower');
+  const mypageFollow = document.querySelector('.mypage-follow');
+
+  // 마이페이지 이미지 설정 및 사용자 정보 출력
   userNavImg.style.backgroundImage =  `url('../data/${mainAxiosData.id}/1.jpg')`;
   profileImage.style.backgroundImage = `url('../data/${mainAxiosData.id}/1.jpg')`;
-  
   userNickname.innerHTML = mainAxiosData.nick;
   postLength.innerHTML = myPageAxiosData.post.length;
   followerLength.innerHTML = followerAxiosData.length-1;
@@ -48,6 +52,8 @@
   }
   const feedSlideContainer = document.querySelector('.feed-slide-container');
   const feedPostModalContainer = document.querySelector('.feed-post-modal-container');
+
+  // 이벤트 위임
   const getTarget = (elem, className)=>{
     while(!elem.classList.contains(className)){
       elem = elem.parentNode;
@@ -58,6 +64,8 @@
     }
     return elem;
   }
+
+  // 회원 탈퇴
   myPageHeader.addEventListener('click', async(e)=>{
     const userSecession = getTarget(e.target, 'user-secession')
     if(userSecession) {
@@ -73,13 +81,58 @@
       }
     }
   })
+
+  const mypageFollowerModalcontainer = document.querySelector('.mypage-follower-modalcontainer');
+  const followercancelModalHandler = (e) => {
+    if (e.target.className === `mypage-follower-modalcontainer`) {
+      mypageFollowerModalcontainer.style.display = `none`;
+      console.log(123)
+    }
+  }
+  mypageFollower.addEventListener('click', async (e)=> {
+    let followerHTML = await fetch('../lib/followerlist');
+    let followerText = followerHTML.text();
+    console.log(followerAxiosData);
+
+    for(let i=0; i<followerAxiosData.length; i++) {
+      mypageFollowerList.innerHTML += followerText;
+      // mypageFollowerList.
+    }
+  })
+
+  // const rightFeedHeader = document.querySelector('.right-feed-header');
+  // const userModal_container = document.querySelector('.userModal-container');
+  // const cancelModalHandler = (e) => {
+  //   if (e.target.className === `userModal-container` || e.target.className === `userModal-menu cancle`) {
+  //     userModal_container.style.display = `none`;
+  //   }
+  // }
+  // rightFeedHeader.addEventListener('click', (e) => {
+  //   const modalButton = getTarget(e.target, 'modal-button');
+  //   if(modalButton) {
+  //     userModal_container.style.display = 'flex';
+  //     console.log(hidden.value);
+  //   }
+  // })
+
+  // userModal_container.addEventListener('click', cancelModalHandler);
+
+  // if (feedItem.dataset.post_id == commentAxiosData[j].post_id) {
+  //   rightFeedList.innerHTML += commentText;
+  //   rightFeedList.children[commentIndex].children[0].style.backgroundImage = `url('../data/${commentAxiosData[j].id}/1.jpg')`;
+  //   rightFeedList.children[commentIndex].children[1].innerHTML = commentAxiosData[j].nickname;
+  //   rightFeedList.children[commentIndex].children[2].innerHTML = commentAxiosData[j].upload_date.split('T')[0];
+  //   rightFeedList.children[commentIndex].children[3].innerHTML = commentAxiosData[j].comment;
+  //   commentIndex++;
+  // };
+
+  // 게시글 클릭시 동적으로 이미지 개수 만큼 li 생성
   feedList.addEventListener('click', async(e)=>{
     const feedItem = getTarget(e.target, 'feed-items');
-    // 게시글 클릭시 동적으로 이미지 개수 만큼 li 생성
     if(feedItem){
       for(let i=0; i<feedItem.dataset.imageCount; i++){
         const feedSlideItems = document.createElement('li');
-        feedSlideItems.className = 'feed-slide-items';
+        feedSlideItems.className = 'feed-slide-items'; 
         feedSlideItems.style.backgroundImage = `url('../data/${feedItem.dataset.post_id}/${i+1}.jpg')`;
         feedSlideList.appendChild(feedSlideItems);
       }
@@ -94,7 +147,7 @@
     rightFeedContents.children[0].innerHTML = feedItem.dataset.content;
     rightFeedContents.children[1].innerHTML = feedItem.dataset.upload_date;
 
-
+    // 댓글
     let commentAxios = await axios.post('/feed_comment_data', {postID : hidden.value});
     let commentAxiosData = commentAxios.data;
     let commentIndex = 0;
@@ -116,7 +169,8 @@
         commentIndex++;
       };
     }
-
+    
+    // 좋아요
     const likeAxios = await axios.post('feed_like_process',{postID:hidden.value});
 			const likeAxiosData = await likeAxios.data;
 			console.log(likeAxiosData);
@@ -154,6 +208,7 @@
     const submit = getTarget(e.target, 'right-feed-bottom-submit');
     const likeBtn = getTarget(e.target, 'like-btn');
 
+    // 좋아요 버튼 클릭 시
     if (likeBtn) {
 			if (likeBtn.getAttribute('fill') == '#262626') {
 				const likePostID = hidden.value;
@@ -171,11 +226,11 @@
 				let likeCount = parseInt(likeBtn.nextElementSibling.innerHTML);
 				likeBtn.nextElementSibling.innerHTML = `${--likeCount}명`
 			}
-		}
+    }
     
+    // 댓글 입력후 등록버튼 클릭 시
     if(submit){
       if(submit.previousElementSibling){
-
         await axios.post('/feed_insert_comment', {postID: hidden.value, comment_content: submit.previousElementSibling.value});
         const rightFeedItems = document.createElement('li');
         const rightFeedImage = document.createElement('a');
@@ -226,10 +281,15 @@
       for(let i=0; i<commentItems.length; i++){
         commentItems[i].remove();
       }
+      const likeBtn = document.querySelector('.like-btn');
+      likeBtn.setAttribute('fill', '#262626')
+      likeBtn.firstElementChild.setAttribute('d', "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z");
+      likeBtn.nextElementSibling.innerHTML = `0명`;
     }
 
   })
 
+  // 마이페이지 게시물 삭제
   const rightFeedHeader = document.querySelector('.right-feed-header');
   const userModal_container = document.querySelector('.userModal-container');
   const cancelModalHandler = (e) => {
@@ -261,23 +321,7 @@
         delfeedItems[i].remove();
       }
     }
-    const likeBtn = document.querySelector('.like-btn');
-		likeBtn.setAttribute('fill', '#262626')
-    likeBtn.firstElementChild.setAttribute('d', "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z");
-    likeBtn.nextElementSibling.innerHTML = `0명`;
   })
-  
-  // const middleNavList = document.querySelector('.middle-nav-list');
-  // middleNavList.addEventListener('click', async(e)=> {
-  //   const likeBtn = getTarget(e.target, 'like-btn');
-  //   if(likeBtn) {
-  //     likeBtn.setAttribute('fill', '#ed4956');
-  //     likeBtn.firstElementChild.setAttribute('d', 'M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z');
-  //     console.log(hidden.value);
-  //     await axios.post('/add_like', {likePostID: hidden.value});
-      
-  //   }
-  // })
   
   window.addEventListener('resize',()=>{
     feedSlideListWidth = feedSlideContainer.clientWidth * feedSlideItems.length;

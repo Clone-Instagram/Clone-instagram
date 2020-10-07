@@ -8,7 +8,7 @@ nav {
   left: 0;
   top: 0;
   right: 0;
-  z-index: 10;
+  z-index: 30;
   height: 54px;
 }
 
@@ -50,7 +50,7 @@ nav {
   padding: 5px 9px;
   font-size: 14px;
   text-decoration: none;
-  z-index: 500;
+  z-index: 20;
   cursor: pointer;
 }
 .user2 > a {
@@ -70,6 +70,10 @@ nav {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.like-btn {
+  cursor: pointer;
 }
 
 /* -----------------------------------------------*/
@@ -97,6 +101,7 @@ body{
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
 .feed-post-modal-container{
@@ -335,4 +340,33 @@ body{
   .userModal-menu{
     width: 18rem;
   }
+}
+/*팔로워 리스트*/
+.mypage-follower-modalcontainer {
+  z-index :20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display:none;
+}
+.mypage-follower-list {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.7rem;
+  /* justify-content: center; */
+}
+.follower-list {
+  font-family: 'Noto Sans KR', sans-serif;
+  width: 28rem;
+  height: 3.3rem;
+  font-size: 1rem;
+  font-weight: 200;
+  border-bottom: 0.5px solid #ddd;
 }
