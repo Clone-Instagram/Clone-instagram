@@ -169,7 +169,7 @@ app.get('/search_data', async (req, res, next) => {
   };
 
   if(req.session.searchData.search_text.startsWith('#')){
-    db.query(`select post.post_id, post.id, nickname, content,upload_date from post left join post_content on post.post_id = post_content.post_id where not post.id='${req.session.idname}' and content like '%${req.session.searchData.search_text}%';`,async (err, data)=>{
+    db.query(`select post.post_id, post.id, nickname, content,upload_date from post left join post_content on post.post_id = post_content.post_id where content like '%${req.session.searchData.search_text}%';`,async (err, data)=>{
       for(let i=0; i<data.length; i++){
         feedPost.images[i] = await fs.readdir(`./public/data/${data[i].post_id}`);
       }
@@ -182,9 +182,6 @@ app.get('/search_data', async (req, res, next) => {
       return res.end(JSON.stringify(data));
     });
   }
-
-
-
 });
 
 //로그아웃 라우터
@@ -622,7 +619,16 @@ app.post('/feed_comment_data', async (req, res, next)=>{
     return res.end(JSON.stringify(data));
   })
 })
-
+// 댓글 삭제
+app.post('/new_delete_comment', (req, res, next)=>{
+  const data = req.body
+  console.log(data);
+  db.query(`delete from post_comment where post_id = ${data.postId} and upload_date='${data.date}' `, (err, result)=>{
+    if(err) next(new Error('댓글 삭제 오류'))
+    return res.end();
+  })
+})
+// 댓글삭제 끝
 //피드추천 끝
 app.use((err, req, res, next) => {
   console.log(err);
