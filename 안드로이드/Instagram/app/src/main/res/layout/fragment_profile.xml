@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+    <RelativeLayout
+        android:id="@+id/topPanel1"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/plus"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/plus"/>
+
+        <TextView
+            android:id="@+id/profile_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/plus"
+            android:text="dddd"
+            android:textColor="#000000"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/list"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/panel2"
+        android:layout_below="@+id/topPanel1"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
+
+        <ImageView
+            android:id="@+id/profile_Image2"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/post2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="180dp"
+            android:layout_marginTop="70dp"
+            android:text="게시물"
+            android:textColor="#000000"
+            android:textSize="15dp"></TextView>
+
+        <TextView
+            android:id="@+id/follower_text"
+            android:layout_toRightOf="@id/post2"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="팔로워"
+            android:textSize="15dp"
+            android:textColor="#000000">
+        </TextView>
+
+        <TextView
+            android:id="@+id/following_text"
+            android:layout_toRightOf="@id/follower_text"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="팔로잉"
+            android:textSize="15dp"
+            android:textColor="#000000">
+        </TextView>
+    </RelativeLayout>
+
+    <Button
+        android:layout_marginTop="30dp"
+        android:id="@+id/profile_edit"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/panel2"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:text="프로필 편집"
+        android:background="@drawable/button_shape">
+    </Button>
+
+    <RelativeLayout
+        android:id="@+id/story_panel"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/profile_edit">
+
+        <TextView
+            android:id="@+id/story_highlight"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:text="스토리 하이라이트"
+            android:layout_marginLeft="15dp"
+            android:textColor="#000">
+        </TextView>
+
+        <TextView
+            android:layout_below="@id/story_highlight"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:text="좋아하는 스토리를 프로필에 보관해보세요"
+            android:textColor="#000"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="3dp">
+        </TextView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mid_panel"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/story_panel"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/story">
+        </ImageView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/mid_panel"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivision">
+    </LinearLayout>
+
+</RelativeLayout>

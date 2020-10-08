@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+   <!-- <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="left">
+
+            <ImageButton
+                android:id="@+id/cameraButton1"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/camera" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/instagramm" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/up" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/toolbar_division"
+        android:orientation="horizontal"
+        android:background="@color/colorDivision"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp">
+
+    </LinearLayout>-->
+
+ <FrameLayout
+     android:id="@+id/main_content"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:layout_above="@+id/navi_division"
+     android:layout_marginBottom="24dp"></FrameLayout>
+
+ <LinearLayout
+        android:id="@+id/navi_division"
+        android:orientation="horizontal"
+        android:background="@color/colorDivision"
+        android:layout_above="@+id/bottom_Navigation"
+        android:layout_width="match_parent"
+        android:layout_height="1dp">
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_Navigation"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_navigation_main"
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconTint="@drawable/bottom_menu_selector">
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
+</RelativeLayout>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#ffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        
+        <ImageView
+            android:id="@+id/post_profile_image"
+            android:src="@mipmap/ic_launcher"
+            android:layout_margin="7.5dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"/>
+
+        <TextView
+            android:text="user name"
+            android:id="@+id/post_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/post_image"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp">
+
+            <ImageView
+                android:id="@+id/post1"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/post1" />
+
+            <CheckBox
+                android:layout_width="32dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginLeft="11.5dp"
+                android:button="@android:color/transparent"
+                android:background="@drawable/checkbox"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="right">
+            <ImageView
+                android:src="@drawable/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/like_count"
+        android:text="님 외 여러명이 좋아합니다"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/post_text"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/profile_Image"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginLeft="8dp"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"/>
+
+        <EditText
+            android:id="@+id/coment"
+            android:background="@android:color/transparent"
+            android:hint="댓글 달기..."
+            android:textSize="15dp"
+            android:layout_marginLeft="1dp"
+            android:gravity="bottom"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/coment_regist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="게시"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#649CDD"
+                android:textSize="18dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sysdata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"/>
+
+
+</LinearLayout>
