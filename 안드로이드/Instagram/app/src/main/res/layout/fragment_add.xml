@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <RelativeLayout
+        android:id="@+id/fragment_add"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        >
+
+        <ImageButton
+            android:id="@+id/ex"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ximage"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="10dp">
+        </ImageButton>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="갤러리"
+            android:textSize="25dp"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:layout_marginLeft="50dp">
+        </TextView>
+
+        <Button
+            android:id="@+id/next3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="다음"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:textColor="#188AD8"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent">
+        </Button>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/fragment_ImageView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/fragment_add"/>
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_Rv"
+        android:layout_below="@+id/fragment_ImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+
+</RelativeLayout>

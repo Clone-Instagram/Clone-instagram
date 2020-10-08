@@ -1,0 +1,11 @@
+<resources>
+    <string name="facebook_app_id">365492851126869</string>
+    <string name="fb_login_protocol_scheme">fb365492851126869</string>
+
+
+    <string name="app_name">Instagram</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="add">Add</string>
+    <string name="account">Account</string>
+</resources>
