@@ -148,7 +148,7 @@
       });
     });
   });
-  app.post('/feed_like_process', (req, res) => {
+  app.post('/feed_like_process', (req, res, next) => {
     const postID = req.body;
     db.query(`select * from post_likes where likes_id ='${req.session.idname}' and post_id = ${postID.postID} order by post_id desc`, (err1, data1) => {
       if (err1) next(new Error('좋아요 불러오기 실패'));
@@ -537,14 +537,14 @@
   });
   
   app.get('/follower_length', async (req, res, next) => {
-    db.query(` select following.id, following.following_id, user.nickname from following left join user on following.id = user.id where following.following_id = '${req.session.idname}'`, async (err, data) => {
+    db.query(`select following.id, following.following_id, user.nickname from following left join user on following.id = user.id where not following.id='${req.session.idname}' and following.following_id = '${req.session.idname}'`, async (err, data) => {
       if(err) next(new Error('follower 오류'));
       return res.end(JSON.stringify(data));
     })
   });
   
   app.get('/follow_length', async (req, res, next) => {
-    db.query(`select following.id, following.following_id, user.nickname from following left join user on following.following_id = user.id where following.id = '${req.session.idname}'`, (err, data) => {
+    db.query(`select following.id, following.following_id, user.nickname from following left join user on following.following_id = user.id where not following.following_id='${req.session.idname}' and following.id = '${req.session.idname}'`, (err, data) => {
       if(err) next(new Error('follower 오류'));
       return res.end(JSON.stringify(data));
     })

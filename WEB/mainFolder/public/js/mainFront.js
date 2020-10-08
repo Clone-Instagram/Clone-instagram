@@ -196,6 +196,7 @@
           const result = [hour, tempDate[1].split(':')[1],tempDate[1].split(':')[2]]
           tempDate[1] = result.join(':');
           const date = tempDate.join('T');
+          console.log(date);
           try{
             await axios.post('/new_delete_comment', { postId, date });
             commentList[i].remove();
@@ -446,7 +447,7 @@
   async function operateFollowing() {
     const side = document.querySelector('.side');
     side.addEventListener('click', async (e)=>{
-      const followBtn = getTarget(e.target, 'follow_button')
+      const followBtn = getTarget(e.target, 'follow_button');
       if(followBtn){
         if(followBtn.innerHTML == '팔로우') {
           followBtn.innerHTML = '팔로잉'

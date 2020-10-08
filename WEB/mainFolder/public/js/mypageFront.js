@@ -1,12 +1,33 @@
 (async ()=>{
-  const myPageAxios = await axios.post('/mypage');
-  const myPageAxiosData = await myPageAxios.data;
-  const mainAxios = await axios.get('/main_data');
-  const mainAxiosData = await mainAxios.data;
-  const followerAxios = await axios.get('/follower_length');
-  const followerAxiosData = await followerAxios.data;
-  const followAxios = await axios.get('/follow_length');
-  const followAxiosData = await followAxios.data;
+  let myPageAxios
+  let myPageAxiosData 
+  let mainAxios
+  let mainAxiosData
+  let followerAxios
+  let followerAxiosData
+  let followAxios
+  let followAxiosData
+
+  try{
+    myPageAxios = await axios.post('/mypage');
+    myPageAxiosData = await myPageAxios.data;
+    mainAxios = await axios.get('/main_data');
+    mainAxiosData = await mainAxios.data;
+    followerAxios = await axios.get('/follower_length');
+    followerAxiosData = await followerAxios.data;
+    followAxios = await axios.get('/follow_length');
+    followAxiosData = await followAxios.data;
+  }catch(err) {
+    myPageAxios = await axios.post('/mypage');
+    myPageAxiosData = await myPageAxios.data;
+    mainAxios = await axios.get('/main_data');
+    mainAxiosData = await mainAxios.data;
+    followerAxios = await axios.get('/follower_length');
+    followerAxiosData = await followerAxios.data;
+    followAxios = await axios.get('/follow_length');
+    followAxiosData = await followAxios.data;
+  }
+
 
   console.log(myPageAxiosData);
 
@@ -27,16 +48,15 @@
   const myPageHeader = document.querySelector('.my-page-header');
   const likeBtn = document.querySelector('.like-btn');
   const mypageFollowerList = document.querySelector('.mypage-follower-list');
-  // const mypageFollower = document.querySelector('.mypage-follower');
-  // const mypageFollow = document.querySelector('.mypage-follow');
+
 
   // 마이페이지 이미지 설정 및 사용자 정보 출력
   userNavImg.style.backgroundImage =  `url('../data/${mainAxiosData.id}/1.jpg')`;
   profileImage.style.backgroundImage = `url('../data/${mainAxiosData.id}/1.jpg')`;
   userNickname.innerHTML = mainAxiosData.nick;
   postLength.innerHTML = myPageAxiosData.post.length;
-  followerLength.innerHTML = followerAxiosData.length-1;
-  followLength.innerHTML = followAxiosData.length-1;
+  followerLength.innerHTML = followerAxiosData.length;
+  followLength.innerHTML = followAxiosData.length;
   rightFeedNickname.innerHTML = mainAxiosData.nick;
   
   // 동적으로 게시글 li 생성
@@ -68,7 +88,11 @@
   const followercancelModalHandler = (e) => {
     if (e.target.className === `mypage-follower-modalcontainer`) {
       mypageFollowerModalcontainer.style.display = `none`;
-      // console.log(123)
+      const followerList = document.querySelectorAll('.follower-list');
+      console.log(followerList.length)
+      for(let i=0; i<followerList.length; i++){
+        followerList[i].remove();
+      }
     }
   }
   const mypageFollowerModalcontainer = document.querySelector('.mypage-follower-modalcontainer');
@@ -78,7 +102,6 @@
     const mypageFollower = getTarget(e.target, 'mypage-follower');
     const mypageFollow = getTarget(e.target, 'mypage-follow');
 
-    let followerIndex = 0;
     let followerHTML = await fetch('../lib/followerlist');
     let followerText = await followerHTML.text();
     // 회원 탈퇴
@@ -94,35 +117,42 @@
         alert('비밀번호가 틀렸습니다.')
       }
       // 팔로워 리스트
-    } else if(mypageFollower) {
-      console.log(e.target);
+    } 
+    else if(mypageFollower) {
+      console.log(mypageFollower)
       mypageFollowerModalcontainer.style.display = `flex`;
-      // console.log(followerAxiosData);
+      console.log(followerAxiosData);
       for(let i=0; i<followerAxiosData.length; i++) {
         mypageFollowerList.innerHTML += followerText;
-        console.log(followerAxiosData);
-        mypageFollowerList.children[followerIndex].children[0].style.backgroundImage = `url('../data/${followerAxiosData[i].id}/1.jpg')`;
-        mypageFollowerList.children[followerIndex].children[1].children[0].innerHTML = followerAxiosData[i].nickname;
-        mypageFollowerList.children[followerIndex].children[1].children[1].innerHTML = followerAxiosData[i].id;
-        mypageFollowerList.children[followerIndex].children[2].children[0].innerHTML = '팔로잉';
-        followerIndex++;
+        mypageFollowerList.children[i].children[0].style.backgroundImage = `url('../data/${followerAxiosData[i].id}/1.jpg')`;
+        mypageFollowerList.children[i].children[1].children[0].innerHTML = followerAxiosData[i].nickname;
+        mypageFollowerList.children[i].children[1].children[1].innerHTML = followerAxiosData[i].id;
+        for(let j=0; j<followAxiosData.length; j++) {
+          if(followerAxiosData[i].id == followAxiosData[j].following_id){
+            mypageFollowerList.children[i].children[2].children[0].innerHTML = '팔로잉';
+          } 
+          // else {
+          //   mypageFollowerList.children[i].children[2].children[0].innerHTML = '팔로우';
+          // }
+        }
+        
       }
+      
       // 팔로우 리스트
-    } else if(mypageFollow) {
+    } 
+    else if(mypageFollow) {
       mypageFollowerModalcontainer.style.display = `flex`;
       for(let i=0; i<followAxiosData.length; i++) {
         mypageFollowerList.innerHTML += followerText;
-        console.log(followAxiosData);
-        mypageFollowerList.children[followerIndex].children[0].style.backgroundImage = `url('../data/${followAxiosData[i].id}/1.jpg')`;
-        mypageFollowerList.children[followerIndex].children[1].children[0].innerHTML = followAxiosData[i].nickname;
-        mypageFollowerList.children[followerIndex].children[1].children[1].innerHTML = followAxiosData[i].following_id;
-        mypageFollowerList.children[followerIndex].children[2].children[0].innerHTML = '팔로잉';
-        followerIndex++;
+        mypageFollowerList.children[i].children[0].style.backgroundImage = `url('../data/${followAxiosData[i].following_id}/1.jpg')`;
+        mypageFollowerList.children[i].children[1].children[0].innerHTML = followAxiosData[i].nickname;
+        mypageFollowerList.children[i].children[1].children[1].innerHTML = followAxiosData[i].following_id;
+        mypageFollowerList.children[i].children[2].children[0].innerHTML = '팔로잉';
       }
     } 
   })
   
-  mypageFollowerModalcontainer.addEventListener('click', followercancelModalHandler);
+  await mypageFollowerModalcontainer.addEventListener('click', followercancelModalHandler);
 
   // 게시글 클릭시 동적으로 이미지 개수 만큼 li 생성
   feedList.addEventListener('click', async(e)=>{
