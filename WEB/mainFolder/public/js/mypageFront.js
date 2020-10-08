@@ -13,6 +13,7 @@
     myPageAxiosData = await myPageAxios.data;
     mainAxios = await axios.get('/main_data');
     mainAxiosData = await mainAxios.data;
+    console.log(mainAxiosData)
     followerAxios = await axios.get('/follower_length');
     followerAxiosData = await followerAxios.data;
     followAxios = await axios.get('/follow_length');
@@ -119,9 +120,10 @@
       // 팔로워 리스트
     } 
     else if(mypageFollower) {
-      console.log(mypageFollower)
       mypageFollowerModalcontainer.style.display = `flex`;
       console.log(followerAxiosData);
+      console.log(followAxiosData)
+
       for(let i=0; i<followerAxiosData.length; i++) {
         mypageFollowerList.innerHTML += followerText;
         mypageFollowerList.children[i].children[0].style.backgroundImage = `url('../data/${followerAxiosData[i].id}/1.jpg')`;
@@ -129,11 +131,16 @@
         mypageFollowerList.children[i].children[1].children[1].innerHTML = followerAxiosData[i].id;
         for(let j=0; j<followAxiosData.length; j++) {
           if(followerAxiosData[i].id == followAxiosData[j].following_id){
-            mypageFollowerList.children[i].children[2].children[0].innerHTML = '팔로잉';
+            mypageFollowerList.children[i].children[2].innerHTML = '팔로잉';
+            mypageFollowerList.children[i].children[2].style.color= '#333'
+
+            break;
           } 
-          // else {
-          //   mypageFollowerList.children[i].children[2].children[0].innerHTML = '팔로우';
-          // }
+          else {
+            mypageFollowerList.children[i].children[2].innerHTML = '팔로우';
+            mypageFollowerList.children[i].children[2].style.color="dodgerblue"
+
+          }
         }
         
       }
@@ -147,7 +154,9 @@
         mypageFollowerList.children[i].children[0].style.backgroundImage = `url('../data/${followAxiosData[i].following_id}/1.jpg')`;
         mypageFollowerList.children[i].children[1].children[0].innerHTML = followAxiosData[i].nickname;
         mypageFollowerList.children[i].children[1].children[1].innerHTML = followAxiosData[i].following_id;
-        mypageFollowerList.children[i].children[2].children[0].innerHTML = '팔로잉';
+        mypageFollowerList.children[i].children[2].innerHTML = '팔로잉';
+        mypageFollowerList.children[i].children[2].style.color= '#333'
+
       }
     } 
   })
@@ -178,7 +187,6 @@
     // 댓글
     let commentAxios = await axios.post('/feed_comment_data', {postID : hidden.value});
     let commentAxiosData = commentAxios.data;
-    let commentIndex = 0;
 
     let commentHTML = await fetch('../lib/mypagecomment');
     let commentText = await commentHTML.text();
@@ -187,16 +195,30 @@
     const rightFeedImage = document.querySelector('.right-feed-image');
     rightFeedImage.style.backgroundImage = `url('../data/${mainAxiosData.id}/1.jpg')`;
 
-    for (let j = 0; j < commentAxiosData.length; j++) {
-      if (feedItem.dataset.post_id == commentAxiosData[j].post_id) {
+    for (let i = 0; i < commentAxiosData.length; i++) {
+      if (feedItem.dataset.post_id == commentAxiosData[i].post_id) {
         rightFeedList.innerHTML += commentText;
-        rightFeedList.children[commentIndex].children[0].style.backgroundImage = `url('../data/${commentAxiosData[j].id}/1.jpg')`;
-        rightFeedList.children[commentIndex].children[1].innerHTML = commentAxiosData[j].nickname;
-        rightFeedList.children[commentIndex].children[2].innerHTML = commentAxiosData[j].upload_date.split('T')[0];
-        rightFeedList.children[commentIndex].children[3].innerHTML = commentAxiosData[j].comment;
-        commentIndex++;
+        rightFeedList.children[i].children[0].style.backgroundImage = `url('../data/${commentAxiosData[i].id}/1.jpg')`;
+        rightFeedList.children[i].children[1].innerHTML = commentAxiosData[i].nickname;
+        rightFeedList.children[i].children[2].innerHTML = commentAxiosData[i].upload_date.split('T')[0];
+        rightFeedList.children[i].children[3].innerHTML = commentAxiosData[i].comment;
+        rightFeedList.children[i].dataset.id = commentAxiosData[i].id;
+        rightFeedList.children[i].dataset.post_id = commentAxiosData[i].post_id;const resultDate = commentAxiosData[i].upload_date.split('T');
+        let hour
+        if(new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[3].startsWith('오후')){
+            hour = (parseInt(new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0])+12).toString()
+        } else {
+            hour = (new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0]).toString()
+        }
+        resultDate[1] = new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4]
+        const result = [hour, resultDate[1].split(':')[1],resultDate[1].split(':')[2]]
+        resultDate[1] = result.join(':');
+        const date = resultDate.join('T')
+        rightFeedList.children[i].dataset.date = date
       };
     }
+    // const rightFeedItem = document.querySelectorAll('.right-feed-items');
+
     
     // 좋아요
     const likeAxios = await axios.post('feed_like_process',{postID:hidden.value});
@@ -236,6 +258,15 @@
     const submit = getTarget(e.target, 'right-feed-bottom-submit');
     const likeBtn = getTarget(e.target, 'like-btn');
 
+    const commentDeleteButton = getTarget(e.target, 'comment-delete-button');
+      if(commentDeleteButton) {
+        console.log(commentDeleteButton)
+        const postId = hidden.value;
+        const date = commentDeleteButton.parentNode.dataset.date
+        await axios.post('/new_delete_comment', {postId, date});
+        commentDeleteButton.parentNode.remove();
+      }
+
     // 좋아요 버튼 클릭 시
     if (likeBtn) {
 			if (likeBtn.getAttribute('fill') == '#262626') {
@@ -259,12 +290,17 @@
     // 댓글 입력후 등록버튼 클릭 시
     if(submit){
       if(submit.previousElementSibling){
+        const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+        const timezoneDate = new Date(Date.now() - timezoneOffset);
+        const dbDate = timezoneDate.toISOString().slice(0, 19)
         await axios.post('/feed_insert_comment', {postID: hidden.value, comment_content: submit.previousElementSibling.value});
         const rightFeedItems = document.createElement('li');
         const rightFeedImage = document.createElement('a');
         const rightFeedNickname = document.createElement('p');
         const rightFeedDate = document.createElement('p');
         const rightFeedComment = document.createElement('p');
+        const deleteButton = document.createElement('p');
+        deleteButton.className = 'comment-delete-button'
         rightFeedItems.className = 'right-feed-items';
         rightFeedImage.className = 'right-feed-image';
         rightFeedNickname.className = 'right-feed-nickname';
@@ -274,10 +310,16 @@
         rightFeedNickname.innerHTML = myPageAxiosData.post[0].nickname;
         rightFeedDate.innerHTML = `${year}-${month}-${date}`;
         rightFeedComment.innerHTML = submit.previousElementSibling.value;
+        deleteButton.innerHTML = '삭제'
+
+        rightFeedItems.dataset.id = mainAxiosData.id;
+        rightFeedItems.dataset.post_id = hidden.value;
+        rightFeedItems.dataset.date = dbDate;
         rightFeedItems.appendChild(rightFeedImage);
         rightFeedItems.appendChild(rightFeedNickname);
         rightFeedItems.appendChild(rightFeedDate);
         rightFeedItems.appendChild(rightFeedComment);
+        rightFeedItems.appendChild(deleteButton);
         rightFeedList.appendChild(rightFeedItems);
         submit.previousElementSibling.value = null;
       }
@@ -350,6 +392,25 @@
         delfeedItems[i].remove();
       }
     }
+  })
+
+  feedPostModalContainer.addEventListener('mouseover', (e)=>{
+    let commentItems;
+    if(e.target.className == 'right-feed-items') commentItems = e.target;
+    if(commentItems) {
+        if(commentItems.dataset.id === mainAxiosData.id) {
+            commentItems.children[4].style.display="inline"
+        }
+    }
+})
+  feedPostModalContainer.addEventListener('mouseout', (e)=>{
+      let commentItems;
+      if(e.target.className == 'right-feed-items') commentItems = e.target;
+      if(commentItems) {
+          if(commentItems.dataset.id === mainAxiosData.id) {
+              commentItems.children[4].style.display="none"
+          }
+      }
   })
   
   window.addEventListener('resize',()=>{

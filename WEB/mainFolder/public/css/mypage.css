@@ -63,8 +63,27 @@ nav {
 .user2 > a:visited {
   text-decoration: none;
 }
+.profile-section-image{
+  display: flex;
+  align-items: center;
+  padding-left: 6.3rem;
+  padding-bottom: 2rem;
+  width: 30%;
+  height: 100%;
+}
+.profile-section-infor{
+  display: flex;
+  padding-bottom: 2rem;
 
+  padding-left: 4rem;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 70%;
+}
 .profileImage {
+  flex-shrink: 0;
+  display:block;
   width: 150px;
   height: 150px;
   border: 1px solid #d8cfcf;
@@ -221,7 +240,7 @@ body{
 
 .right-feed-comment{
   display: block;
-  width: 100%;
+  width: 80%;
   font-size: 0.8rem;
   padding: 0 1rem 0 3rem;
 }
@@ -275,6 +294,13 @@ body{
   display: flex;
   align-items: center;
   height: 3rem;
+}
+
+.comment-delete-button {
+  font-size: 0.8rem;
+  color: #bbb;
+  cursor: pointer;
+  display: none;
 }
 .mypage-post-count{
   margin: 0 1rem;
@@ -368,7 +394,6 @@ body{
 }
 .follower-list {
   display: flex;
-  justify-content: center;
   align-items: center;
   padding: 8px 16px;
   font-family: 'Noto Sans KR', sans-serif;
@@ -398,4 +423,21 @@ body{
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  margin: 0 1rem;
+}
+.follower-nickname {
+  color: #666;
+  text-decoration: none;
+  font-weight: 400;
+}
+.follower-name {
+  color: #999;
+  font-size: 0.8rem;
+  text-decoration: none;
+  font-weight: 400;
+}
+.list-follow-button{
+  margin-left: auto;
+  margin-right: 1rem;
+  font-weight: 400;
 }

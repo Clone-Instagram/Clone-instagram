@@ -4,7 +4,5 @@
     <a href="#" class="follower-nickname">닉네임</a>
     <div class="follower-name">이름</div>
   </div>
-  <button>
-    <div class="list-follow-button">팔로우</div>
-  </button>
+  <div class="list-follow-button">follow-state</div>
 </li>
