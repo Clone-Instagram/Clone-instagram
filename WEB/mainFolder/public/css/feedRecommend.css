@@ -205,3 +205,11 @@ body{
         margin-top: 2rem;
     }
 }
+
+.right-feed-comment {width:80%}
+ .comment-delete-button {
+            font-size: 0.8rem;
+            color: #bbb;
+            cursor: pointer;
+            display: none;
+        } 

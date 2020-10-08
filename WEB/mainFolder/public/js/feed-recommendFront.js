@@ -76,7 +76,6 @@
 			let feedCommentAxios = await axios.post('/feed_comment_data',{postID:hidden.value});
 			let feedCommentAxiosData = feedCommentAxios.data;
 			console.log(feedCommentAxiosData);
-			let commentIndex = 0;
 			const likeAxios = await axios.post('feed_like_process',{postID:hidden.value});
 			const likeAxiosData = await likeAxios.data;
 			console.log(likeAxiosData);
@@ -93,18 +92,31 @@
 			let feedCommentHTML = await fetch('../lib/feedcomment');
 			let feedCommentHTMLText = await feedCommentHTML.text();
 			const feedCommentUL = document.querySelector('.right-feed-list');
-			const rightFeedItem = document.querySelectorAll('.right-feed-items');
 			
 			for(let i =0; i< feedCommentAxiosData.length; i++) {
 				feedCommentUL.innerHTML += feedCommentHTMLText;
 				if(feedItem.dataset.post_id == feedCommentAxiosData[i].post_id) {
-					feedCommentUL.children[commentIndex].children[0].style.backgroundImage = `url('../data/${feedCommentAxiosData[i].id}/1.jpg')`
-					feedCommentUL.children[commentIndex].children[1].innerHTML = feedCommentAxiosData[i].nickname;
-					feedCommentUL.children[commentIndex].children[2].innerHTML = feedCommentAxiosData[i].upload_date.split('T')[0];
-					feedCommentUL.children[commentIndex].children[3].innerHTML = feedCommentAxiosData[i].comment;
-					commentIndex++;
+					feedCommentUL.children[i].children[0].style.backgroundImage = `url('../data/${feedCommentAxiosData[i].id}/1.jpg')`
+					feedCommentUL.children[i].children[1].innerHTML = feedCommentAxiosData[i].nickname;
+					feedCommentUL.children[i].children[2].innerHTML = feedCommentAxiosData[i].upload_date.split('T')[0];
+					feedCommentUL.children[i].children[3].innerHTML = feedCommentAxiosData[i].comment;
+					feedCommentUL.children[i].dataset.id = feedCommentAxiosData[i].id;
+					feedCommentUL.children[i].dataset.post_id = feedCommentAxiosData[i].post_id;
+					const resultDate = feedCommentAxiosData[i].upload_date.split('T');
+					let hour
+					if(new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[3].startsWith('오후')){
+						hour = (parseInt(new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0])+12).toString()
+					} else {
+						hour = (new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0]).toString()
+					}
+					resultDate[1] = new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[4]
+					const result = [hour, resultDate[1].split(':')[1],resultDate[1].split(':')[2]]
+					resultDate[1] = result.join(':');
+					const date = resultDate.join('T')
+					feedCommentUL.children[i].dataset.date = date
 				}
 			}
+			// const rightFeedItem = document.querySelectorAll('.right-feed-items');
 		}
 	})
 
@@ -123,7 +135,14 @@
 		const rightBox = getTarget(e.target, 'feed-post-right-section');
 		const submit = getTarget(e.target, 'right-feed-bottom-submit');
 		const likeBtn = getTarget(e.target, 'like-btn');
-
+        const commentDeleteButton = getTarget(e.target, 'comment-delete-button');
+        if(commentDeleteButton) {
+            console.log(commentDeleteButton)
+            const postId = hidden.value;
+            const date = commentDeleteButton.parentNode.dataset.date
+            await axios.post('/new_delete_comment', {postId, date});
+            commentDeleteButton.parentNode.remove();
+        }
 		if (likeBtn) {
 			if (likeBtn.getAttribute('fill') == '#262626') {
 				const likePostID = hidden.value;
@@ -152,6 +171,9 @@
 		    // <p class="right-feed-date">whdlsxo123</p>
 		    // <p class="right-feed-comment">안녕하세요</p>
 			// </li> 
+			const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+            const timezoneDate = new Date(Date.now() - timezoneOffset);
+            const dbDate = timezoneDate.toISOString().slice(0, 19)
 			let feedCommentAxios = await axios.post('/feed_comment_data',{postID:hidden.value});
 			let feedCommentAxiosData = feedCommentAxios.data;
 			await axios.post('/feed_insert_comment', {postID: hidden.value, comment_content: submit.previousElementSibling.value})
@@ -160,6 +182,12 @@
 			const rightFeedNickname = document.createElement('p');
 			const rightFeedDate = document.createElement('p');
 			const rightFeedComment = document.createElement('p');
+			const deleteButton = document.createElement('p');
+			deleteButton.className = 'comment-delete-button'
+			deleteButton.innerHTML = '삭제'
+			rightFeedItems.dataset.id = feedAxiosData.id;
+			rightFeedItems.dataset.post_id = hidden.value;
+			rightFeedItems.dataset.date = dbDate;
 			rightFeedItems.className = 'right-feed-items';
 			rightFeedImage.className = 'right-feed-image';
 			rightFeedNickname.className = 'right-feed-nickname';
@@ -173,6 +201,7 @@
 			rightFeedItems.appendChild(rightFeedNickname)
 			rightFeedItems.appendChild(rightFeedDate)
 			rightFeedItems.appendChild(rightFeedComment)
+			rightFeedItems.appendChild(deleteButton);
 			rightFeedList.appendChild(rightFeedItems);
 			submit.previousElementSibling.value = null;
 			}
@@ -216,6 +245,24 @@
       likeBtn.nextElementSibling.innerHTML = `0명`;
 		}
 	})
+	feedPostModalContainer.addEventListener('mouseover', (e)=>{
+        let commentItems;
+        if(e.target.className == 'right-feed-items') commentItems = e.target;
+        if(commentItems) {
+            if(commentItems.dataset.id === feedAxiosData.id) {
+                commentItems.children[4].style.display="inline"
+            }
+        }
+    })
+    feedPostModalContainer.addEventListener('mouseout', (e)=>{
+        let commentItems;
+        if(e.target.className == 'right-feed-items') commentItems = e.target;
+        if(commentItems) {
+            if(commentItems.dataset.id === feedAxiosData.id) {
+                commentItems.children[4].style.display="none"
+            }
+        }
+    })
 	window.addEventListener('resize',()=>{
 		feedSlideListWidth = feedSlideContainer.clientWidth * feedSlideItems.length;
 		feedSlideList.style.width = `${feedSlideListWidth}px`
