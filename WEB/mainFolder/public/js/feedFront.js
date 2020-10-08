@@ -15,6 +15,9 @@
     const likeButton = document.querySelector('.like-btn')
     let feedSlideItems
     let feedSlideListWidth;
+
+    const userImage = document.querySelector('.user_img');
+    userImage.style.backgroundImage=`url('../data/${searchAxiosData.id}/1.jpg')`
     const getTarget = (elem, className) => {
         while (!elem.classList.contains(className)) {
             elem = elem.parentNode;

@@ -117,8 +117,8 @@
       } else {
         alert('비밀번호가 틀렸습니다.')
       }
-      // 팔로워 리스트
     } 
+    // 팔로워 리스트
     else if(mypageFollower) {
       mypageFollowerModalcontainer.style.display = `flex`;
       console.log(followerAxiosData);
@@ -132,21 +132,17 @@
         for(let j=0; j<followAxiosData.length; j++) {
           if(followerAxiosData[i].id == followAxiosData[j].following_id){
             mypageFollowerList.children[i].children[2].innerHTML = '팔로잉';
-            mypageFollowerList.children[i].children[2].style.color= '#333'
-
+            mypageFollowerList.children[i].children[2].style.color= '#333';
             break;
           } 
           else {
             mypageFollowerList.children[i].children[2].innerHTML = '팔로우';
-            mypageFollowerList.children[i].children[2].style.color="dodgerblue"
-
+            mypageFollowerList.children[i].children[2].style.color = 'dodgerblue';
           }
         }
-        
       }
-      
-      // 팔로우 리스트
     } 
+    // 팔로우 리스트
     else if(mypageFollow) {
       mypageFollowerModalcontainer.style.display = `flex`;
       for(let i=0; i<followAxiosData.length; i++) {
@@ -156,7 +152,6 @@
         mypageFollowerList.children[i].children[1].children[1].innerHTML = followAxiosData[i].following_id;
         mypageFollowerList.children[i].children[2].innerHTML = '팔로잉';
         mypageFollowerList.children[i].children[2].style.color= '#333'
-
       }
     } 
   })

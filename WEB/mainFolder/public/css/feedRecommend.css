@@ -8,12 +8,14 @@ body{
     justify-content: center;
     max-width: 1000px;
     margin: auto;
+    position: relative;
+    top: 4rem;
 }
 .feed-items{
     margin: 0.55rem;
     display: block;
-    width: 28%;
-    padding-bottom: 28%;
+    width: 30%;
+    padding-bottom: 30%;
     flex-shrink: 0;
     z-index: 10;
     background-position: center;
@@ -200,9 +202,6 @@ body{
     }
     .feed-post-left-section{
         width: 100%;
-    }
-    .feed-list {
-        margin-top: 2rem;
     }
 }
 

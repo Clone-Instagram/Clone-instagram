@@ -40,6 +40,12 @@
       location.href = "/";
     }
   })
+  document.querySelector('.DM').addEventListener('click', async () => {
+    const logout = await axios.get('/logout');
+    if (logout.data.startsWith('logout')) {
+      location.href = "/";
+    }
+  })
   
   navImage.addEventListener('click', async () => {
     const myPage = await axios.get('/mypage');

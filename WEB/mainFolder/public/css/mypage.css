@@ -14,7 +14,9 @@ nav {
   z-index: 30;
   height: 54px;
 }
-
+.postList {
+  margin-top: 2rem;
+}
 .my-page-main {
   position: absolute;
   right:0;
@@ -440,4 +442,15 @@ body{
   margin-left: auto;
   margin-right: 1rem;
   font-weight: 400;
+}
+
+@media (max-width: 600px){
+  .profile-section-image{
+    display: none;
+  }
+  .profile-section-infor{
+    width: 100%;
+    padding: 0;
+    align-items: center;
+  }
 }
