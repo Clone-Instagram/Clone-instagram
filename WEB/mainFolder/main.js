@@ -148,7 +148,7 @@
       });
     });
   });
-  app.post('/feed_like_process', (req, res) => {
+  app.post('/feed_like_process', (req, res, next) => {
     const postID = req.body;
     db.query(`select * from post_likes where likes_id ='${req.session.idname}' and post_id = ${postID.postID} order by post_id desc`, (err1, data1) => {
       if (err1) next(new Error('좋아요 불러오기 실패'));
@@ -537,14 +537,14 @@
   });
   
   app.get('/follower_length', async (req, res, next) => {
-    db.query(`select * from following where following_id = '${req.session.idname}'`, async (err, data) => {
+    db.query(`select following.id, following.following_id, user.nickname from following left join user on following.id = user.id where not following.id='${req.session.idname}' and following.following_id = '${req.session.idname}'`, async (err, data) => {
       if(err) next(new Error('follower 오류'));
       return res.end(JSON.stringify(data));
     })
   });
   
   app.get('/follow_length', async (req, res, next) => {
-    db.query(`select * from following where id = '${req.session.idname}'`, (err, data) => {
+    db.query(`select following.id, following.following_id, user.nickname from following left join user on following.following_id = user.id where not following.following_id='${req.session.idname}' and following.id = '${req.session.idname}'`, (err, data) => {
       if(err) next(new Error('follower 오류'));
       return res.end(JSON.stringify(data));
     })
@@ -631,6 +631,4 @@ app.get('/feed_recommend', async(req, res) => {
     console.log(err);
     res.redirect('/error');
   })
-  app.listen(3030, () => console.log('3030 포트 대기'))
-
-  
+  app.listen(4001, () => console.log('4001 포트 대기'))

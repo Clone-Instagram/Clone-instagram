@@ -1,3 +1,6 @@
+html{
+  font-family: 'Noto Sans KR', sans-serif;
+}
 body{
   width: 98vw;
   height: 100vh;
@@ -8,7 +11,7 @@ nav {
   left: 0;
   top: 0;
   right: 0;
-  z-index: 10;
+  z-index: 30;
   height: 54px;
 }
 
@@ -24,7 +27,10 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0px 0px 44px;
+  margin: auto;
+  border-bottom: 1px solid #bbb;
+  height: 13rem;
+  max-width: 1000px;
 }
 
 .user1 .user2 {
@@ -39,6 +45,7 @@ nav {
 .user-nickname {
   font-size: 28px;
   font-weight: 300;
+  margin: 0 1rem;
 }
 .user-secession {
   border: 1px solid rgb(219, 219, 219);
@@ -46,7 +53,7 @@ nav {
   padding: 5px 9px;
   font-size: 14px;
   text-decoration: none;
-  z-index: 500;
+  z-index: 20;
   cursor: pointer;
 }
 .user2 > a {
@@ -66,6 +73,10 @@ nav {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.like-btn {
+  cursor: pointer;
 }
 
 /* -----------------------------------------------*/
@@ -93,6 +104,7 @@ body{
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
 .feed-post-modal-container{
@@ -264,6 +276,22 @@ body{
   align-items: center;
   height: 3rem;
 }
+.mypage-post-count{
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #333;
+}
+.mypage-follow {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #333;
+}
+.mypage-follower{
+  text-decoration: none;
+  margin: 0 1rem;
+  color: #333;
+}
+
 @media (max-width: 935px){
   .feed-post-modal-box{
       width: 80vw;
@@ -315,4 +343,59 @@ body{
   .userModal-menu{
     width: 18rem;
   }
+}
+
+/*팔로워 리스트*/
+.mypage-follower-modalcontainer {
+  z-index :20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display:none;
+}
+.mypage-follower-list {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.7rem;
+  /* justify-content: center; */
+}
+.follower-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  font-family: 'Noto Sans KR', sans-serif;
+  width: 28rem;
+  height: 3.3rem;
+  font-size: 1rem;
+  font-weight: 200;
+  border-bottom: 0.5px solid #ddd;
+}
+.follower-list:nth-last-child(1){
+  border-bottom: 0;
+}
+.post-length {
+  font-weight: bold;
+}
+.follower-length{
+  font-weight: bold;
+}
+.follow-length{
+  font-weight: bold;
+}
+
+.follower_img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }

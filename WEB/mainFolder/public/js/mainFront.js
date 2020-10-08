@@ -90,6 +90,7 @@
   async function createSlideImage() {
     const postWhole = document.querySelectorAll('.post-whole')
     let img_index = Object.keys(mainAxiosImages).length - 1;
+    console.log(mainAxiosImages);
     for (const imgList in mainAxiosImages) {
       for (let i = 0; i < mainAxiosImages[imgList].length; i++) {
         postWhole[img_index].children[1].firstElementChild.firstElementChild.children[i].style.backgroundImage = `url('../data/${imgList}/${mainAxiosImages[imgList][i]}')`;
@@ -195,6 +196,7 @@
           const result = [hour, tempDate[1].split(':')[1],tempDate[1].split(':')[2]]
           tempDate[1] = result.join(':');
           const date = tempDate.join('T');
+          console.log(date);
           try{
             await axios.post('/new_delete_comment', { postId, date });
             commentList[i].remove();
@@ -445,7 +447,7 @@
   async function operateFollowing() {
     const side = document.querySelector('.side');
     side.addEventListener('click', async (e)=>{
-      const followBtn = getTarget(e.target, 'follow_button')
+      const followBtn = getTarget(e.target, 'follow_button');
       if(followBtn){
         if(followBtn.innerHTML == '팔로우') {
           followBtn.innerHTML = '팔로잉'
@@ -477,6 +479,7 @@
       const data = friendData[0]
       const nickname = await axios.post('/nickData', data);
       const nicknameData = await nickname.data;
+      console.log(friendData[0]);
       for(const name in friendData[0]){
         sideUserImage[x].children[0].children[0].style.backgroundImage = `url('../data/${name}/1.jpg')`;
         recommendInfo[x].children[0].innerHTML = nicknameData[x];
