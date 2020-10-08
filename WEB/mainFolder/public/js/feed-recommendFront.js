@@ -13,7 +13,10 @@
 	// console.log(RightfeedNicknameAxios);
 	// const RightfeedNicknameAxiosData = await RightfeedNicknameAxios.data;
 	console.log(feedAxiosData);
+	
 
+	const userImg = document.querySelector('.user_img');
+	userImg.style.backgroundImage = `url('../data/${feedAxiosData.id}/1.jpg')`;
 	// RightfeedNickname.innerHTML = RightfeedNicknameAxiosData.nick;
 	
 
