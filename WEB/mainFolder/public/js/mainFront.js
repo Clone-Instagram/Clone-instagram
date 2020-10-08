@@ -451,7 +451,7 @@
       if(followBtn){
         if(followBtn.innerHTML == '팔로우') {
           followBtn.innerHTML = '팔로잉'
-          followBtn.style.color = 'crimson';
+          followBtn.style.color = '#333';
           const idData = followBtn.parentNode.parentNode.children[1].children[1].innerHTML;
           await axios.post('/right_add_following',{idData});
         }
