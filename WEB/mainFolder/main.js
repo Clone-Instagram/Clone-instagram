@@ -88,6 +88,32 @@
         const imageLink = await fs.readdir(`./public/data/${data[i].post_id}`);
         user_data.profile = await fs.readdir(`./public/data/안덕우`);
         index = data[i].post_id;
+        user_data.images[index] = imageLink.length;
+        if(i === data.length-1){
+          user_data.post = data;
+          return res.end(JSON.stringify(user_data));
+        }
+      }
+    })
+  })
+  app.post('/android_main2', (req, res)=>{
+    const data = req.body;
+    const user_data = {
+      id: 'anduckwoo',
+      nickname: '안덕우123',
+      post_id: 0,
+      images: 0,
+    };
+    let index;
+    db.query(`select post.post_id, id, nickname, content, upload_date from post left join post_content on post.post_id = post_content.post_id where id in (select following_id from following where id ="${data.name}");`,async (err, data)=>{
+      if(data.length===0){
+        user_data.profile = await fs.readdir(`./public/data/${data.name}`);
+        return res.end(JSON.stringify(user_data));
+      }
+      for(let i=0; i<data.length; i++) {
+        const imageLink = await fs.readdir(`./public/data/${data[i].post_id}`);
+        user_data.profile = await fs.readdir(`./public/data/안덕우`);
+        index = data[i].post_id;
         user_data.images[index] = Array.from(imageLink);
         if(i === data.length-1){
           user_data.post = data;
