@@ -510,8 +510,7 @@
       likeDataAxios = await likeData.data;
       likeDataAxiosMy = await likeDataAxios.data1;
       likeDataAxiosAll = await likeDataAxios.data2;
-      friend = await axios.get('/main_friend');
-      friendData = await friend.data;
+
     } catch (err){
       document.location.reload(true);
     }
@@ -565,8 +564,7 @@
     
     
     await createRightHTML();
-    setFriendData();
-    operateFollowing()
+
     // 게시물이 한개 이상일때 실행
     if (mainAxiosPost.length !== 0) {
       
@@ -587,7 +585,10 @@
       
       
     }
-    
+    friend = await axios.get('/main_friend');
+    friendData = await friend.data;
+    setFriendData();
+    operateFollowing()
     // 게시글 작성 모달
     const insertBox = document.querySelector('.insert-box');
     const insertButton = document.querySelector('.insert-button');

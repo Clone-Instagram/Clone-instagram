@@ -657,8 +657,4 @@ app.get('/feed_recommend', async(req, res) => {
     console.log(err);
     res.redirect('/error');
   })
-<<<<<<< HEAD
-  app.listen(4001, () => console.log('4001 포트 대기'))
-=======
   app.listen(3030, () => console.log('3030 포트 대기'))
->>>>>>> intae
