@@ -1,4 +1,3 @@
-  const checkLog = console.log;
   var cors = require('cors');
   const express = require('express');
   const path = require('path');
@@ -68,7 +67,6 @@
       if (err) {
         console.error(err);
       }
-      console.log(results);
       return res.end(JSON.stringify(results));
     })
   })
@@ -87,7 +85,6 @@
         return res.end(JSON.stringify(user_data));
       }
       for(let i=0; i<data.length; i++) {
-        // console.log(i);
         const imageLink = await fs.readdir(`./public/data/${data[i].post_id}`);
         user_data.profile = await fs.readdir(`./public/data/안덕우`);
         index = data[i].post_id;
@@ -328,7 +325,6 @@
     console.log('폴더 생성후 파일 저장하러갑니다!')
     next();
   }, profile_upload.single('profile'), (req, res) => {
-    console.log(req.file, req.body);
     res.redirect('/main');
   });
   
@@ -342,7 +338,6 @@
   })
   app.post('/feed_insert_comment', async (req, res, next)=>{
     const comment = req.body;
-    console.log(comment)
     db.query(`insert into post_comment (id, nickname, post_id, comment) values ('${req.session.idname}','${req.session.nickname}',${comment.postID},'${comment.comment_content}')`, (err, data) => {
       if (err) next(new Error('댓글 등록 실패'));
       return res.end();
@@ -426,7 +421,6 @@
         for (let i = 0; i < data.length; i++) {
           if (data[i].id == name[j]) {
             result.push(data[i].nickname);
-            // console.log(data[i].nickname);
           }
         }
       }
@@ -442,7 +436,6 @@
   })
   app.post('/delete', (req, res) => {
     const user = req.body;
-    console.log(user)
     req.session.deletePostId = user;
     return res.end();
   });
@@ -589,7 +582,6 @@
       if(err) {
         console.error(err);
       }
-      console.log(results);
       let pyData = {
         id: req.session.idname,
         nickname:req.session.nickname,
@@ -629,7 +621,6 @@ app.get('/feed_recommend', async(req, res) => {
   
   app.post('/feed_insert_comment', async (req, res, next)=>{
     const comment = req.body;
-    console.log(comment)
     db.query(`insert into post_comment (id, nickname, post_id, comment) values ('${req.session.idname}','${req.session.nickname}',${comment.postID},'${comment.comment_content}')`, (err, data) => {
       if (err) next(new Error('댓글 등록 실패'));
       return res.end();
@@ -645,7 +636,6 @@ app.get('/feed_recommend', async(req, res) => {
   // 댓글 삭제
   app.post('/new_delete_comment', (req, res, next)=>{
     const data = req.body
-    console.log(data);
     db.query(`delete from post_comment where post_id = ${data.postId} and upload_date='${data.date}' `, (err, result)=>{
       if(err) next(new Error('댓글 삭제 오류'))
       return res.end();

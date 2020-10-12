@@ -4,7 +4,6 @@
     let searchAxiosData
     searchAxios = await axios.get('/search_data')
     searchAxiosData = await searchAxios.data
-    console.log(searchAxiosData);
     const feedList = document.querySelector('.feed-list');
     const feedSlideList = document.querySelector('.feed-slide-list');
     const feedSlideContainer = document.querySelector('.feed-slide-container');
@@ -17,7 +16,7 @@
     let feedSlideListWidth;
 
     const userImage = document.querySelector('.user_img');
-    userImage.style.backgroundImage=`url('../data/${searchAxiosData.id}/1.jpg')`
+    userImage.style.backgroundImage = `url('../data/${searchAxiosData.id}/1.jpg')`
     const getTarget = (elem, className) => {
         while (!elem.classList.contains(className)) {
             elem = elem.parentNode;
@@ -45,19 +44,17 @@
         if (feedItem) {
             const commentAxios = await axios.post('/feed_comment_data', { postID: feedItem.dataset.post_id })
             const commentAxiosData = await commentAxios.data;
-            console.log(commentAxiosData)
-            const likesAxios = await axios.post('/feed_like_process', {postID: feedItem.dataset.post_id});
+            const likesAxios = await axios.post('/feed_like_process', { postID: feedItem.dataset.post_id });
             const likesAxiosData = await likesAxios.data;
-            console.log(likesAxiosData)
-			if (likesAxiosData.data1.length !== 0) {
-				likeButton.setAttribute('fill', '#ed4956')
+            if (likesAxiosData.data1.length !== 0) {
+                likeButton.setAttribute('fill', '#ed4956')
                 likeButton.children[0].setAttribute('d', "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z");
                 likeButton.nextElementSibling.innerHTML = `${likesAxiosData.data2.length}명`;
-			} else {
+            } else {
                 likeButton.setAttribute('fill', '#262626')
                 likeButton.firstElementChild.setAttribute('d', "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z");
                 likeButton.nextElementSibling.innerHTML = `${likesAxiosData.data2.length}명`;
-			}
+            }
             for (let i = 0; i < commentAxiosData.length; i++) {
                 const commentList = document.createElement('li');
                 const commentImage = document.createElement('a');
@@ -67,19 +64,34 @@
                 commentList.className = 'right-feed-items';
                 // 댓글삭제 추가
                 const deleteButton = document.createElement('p');
-                deleteButton.className='comment-delete-button'
-                deleteButton.innerHTML='삭제'
+                deleteButton.className = 'comment-delete-button'
+                deleteButton.innerHTML = '삭제'
                 commentList.dataset.id = commentAxiosData[i].id;
                 commentList.dataset.post_id = commentAxiosData[i].post_id
                 const resultDate = commentAxiosData[i].upload_date.split('T');
                 let hour
-                if(new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[3].startsWith('오후')){
-                    hour = (parseInt(new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0])+12).toString()
+                let day = resultDate[0].split('-');
+                if (new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[3].startsWith('오후')) {
+
+                    hour = (parseInt(new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0]) + 12).toString()
+                    if (hour === '24') {
+                        hour = (parseInt(hour) - 12).toString();
+                    }
                 } else {
-                    hour = (new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0]).toString()
+                    hour = (new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0]).toString();
+                    if (parseInt(hour) === 12 || parseInt(hour) < 9 && parseInt(hour) >= 1) {
+                        day[2] = (parseInt(day[2]) + 1).toString()
+                        day = day.join('-');
+                        resultDate[0] = day
+                    }
+                    if (hour.length === 1) {
+                        hour = '0' + hour;
+                    } else if (hour === '12') {
+                        hour = '00'
+                    }
                 }
                 resultDate[1] = new Date(commentAxiosData[i].upload_date).toLocaleString().split(' ')[4]
-                const result = [hour, resultDate[1].split(':')[1],resultDate[1].split(':')[2]]
+                const result = [hour, resultDate[1].split(':')[1], resultDate[1].split(':')[2]]
                 resultDate[1] = result.join(':');
                 const date = resultDate.join('T')
                 commentList.dataset.date = date
@@ -92,7 +104,7 @@
                 commentImage.style.backgroundImage = `url('../data/${commentAxiosData[i].id}/1.jpg')`;
                 commentNickname.innerHTML = commentAxiosData[i].nickname;
                 commentContent.innerHTML = commentAxiosData[i].comment;
-                commentDate.innerHTML = commentAxiosData[i].upload_date.split('T')[0];
+                commentDate.innerHTML = date.split('T')[0];
                 commentList.appendChild(commentImage);
                 commentList.appendChild(commentNickname);
                 commentList.appendChild(commentDate);
@@ -100,7 +112,7 @@
                 commentList.appendChild(deleteButton);
 
                 rightFeedList.appendChild(commentList);
-                
+
             }
             rightFeedHeader.children[0].style.backgroundImage = `url('../data/${searchAxiosData.post[feedItem.dataset.number].id}/1.jpg')`
             rightFeedHeader.children[1].innerHTML = feedItem.dataset.nickname;
@@ -136,11 +148,10 @@
         const commentButton = getTarget(e.target, 'right-feed-bottom-submit');
         // 댓글삭제 추가
         const commentDeleteButton = getTarget(e.target, 'comment-delete-button');
-        if(commentDeleteButton) {
-            console.log(commentDeleteButton)
+        if (commentDeleteButton) {
             const postId = hiddenPostID.value;
             const date = commentDeleteButton.parentNode.dataset.date
-            await axios.post('/new_delete_comment', {postId, date});
+            await axios.post('/new_delete_comment', { postId, date });
             commentDeleteButton.parentNode.remove();
         }
         // 댓글삭제 끝
@@ -154,12 +165,12 @@
                 let likeCount = parseInt(likeButton.nextElementSibling.innerHTML);
                 likeButton.nextElementSibling.innerHTML = `${++likeCount}명`
 
-            }else {
+            } else {
                 const likePostID = hiddenPostID.value;
-                await axios.post('/cancel_like', {likePostID});
+                await axios.post('/cancel_like', { likePostID });
                 likeButton.setAttribute('fill', '#262626')
                 likeButton.firstElementChild.setAttribute('d', "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
-        
+
                 let likeCount = parseInt(likeButton.nextElementSibling.innerHTML);
                 likeButton.nextElementSibling.innerHTML = `${--likeCount}명`
             }
@@ -240,7 +251,7 @@
             const likeButton = document.querySelector('.like-btn')
             likeButton.setAttribute('fill', '#262626')
             likeButton.firstElementChild.setAttribute('d', "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
-    
+
             likeButton.nextElementSibling.innerHTML = `0명`;
 
         }
@@ -255,23 +266,23 @@
             color: #bbb;
             cursor: pointer;
         } -> 추가
-     */  
+     */
 
-    feedPostModalContainer.addEventListener('mouseover', (e)=>{
+    feedPostModalContainer.addEventListener('mouseover', (e) => {
         let commentItems;
-        if(e.target.className == 'right-feed-items') commentItems = e.target;
-        if(commentItems) {
-            if(commentItems.dataset.id === searchAxiosData.id) {
-                commentItems.children[4].style.display="inline"
+        if (e.target.className == 'right-feed-items') commentItems = e.target;
+        if (commentItems) {
+            if (commentItems.dataset.id === searchAxiosData.id) {
+                commentItems.children[4].style.display = "inline"
             }
         }
     })
-    feedPostModalContainer.addEventListener('mouseout', (e)=>{
+    feedPostModalContainer.addEventListener('mouseout', (e) => {
         let commentItems;
-        if(e.target.className == 'right-feed-items') commentItems = e.target;
-        if(commentItems) {
-            if(commentItems.dataset.id === searchAxiosData.id) {
-                commentItems.children[4].style.display="none"
+        if (e.target.className == 'right-feed-items') commentItems = e.target;
+        if (commentItems) {
+            if (commentItems.dataset.id === searchAxiosData.id) {
+                commentItems.children[4].style.display = "none"
             }
         }
     })

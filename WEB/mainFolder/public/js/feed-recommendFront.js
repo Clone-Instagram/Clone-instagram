@@ -7,17 +7,11 @@
 	const hidden = document.querySelector('.hidden');
 	const rightFeedList = document.querySelector('.right-feed-list');
 	const likeBtn = document.querySelector('.like-btn');
-	// rightFeedNickname.innerHTML = mainAxiosData.nick;
-	// const RightfeedNickname = document.querySelector('.right-feed-nickname');
-	// const RightfeedNicknameAxios = await axios.get('/main_data');
-	// console.log(RightfeedNicknameAxios);
-	// const RightfeedNicknameAxiosData = await RightfeedNicknameAxios.data;
-	console.log(feedAxiosData);
+
 	
 
 	const userImg = document.querySelector('.user_img');
 	userImg.style.backgroundImage = `url('../data/${feedAxiosData.id}/1.jpg')`;
-	// RightfeedNickname.innerHTML = RightfeedNicknameAxiosData.nick;
 	
 
 	// 동적으로 게시글 이미지 li생성
@@ -50,7 +44,6 @@
 	// feed들 
 	feedList.addEventListener('click', async(e)=>{
 		const feedItem = getTarget(e.target, 'feed-items')
-		// console.log(e.target)
 		if(feedItem){ // feed 하나를 클릭했을 때
 			for(let i=0; i<feedAxiosData.images[feedItem.dataset.index].length; i++){  //1.jpg 2.jpg, 3.jpg -> 이미지 갯수만큼
 				const feedSlideItems = document.createElement('li'); // 이미지 갯수만큼 슬라이드 li태그를 생성.
@@ -78,10 +71,8 @@
 
 			let feedCommentAxios = await axios.post('/feed_comment_data',{postID:hidden.value});
 			let feedCommentAxiosData = feedCommentAxios.data;
-			console.log(feedCommentAxiosData);
 			const likeAxios = await axios.post('feed_like_process',{postID:hidden.value});
 			const likeAxiosData = await likeAxios.data;
-			console.log(likeAxiosData);
 			if (likeAxiosData.data1.length !== 0) {
 				likeBtn.setAttribute('fill', '#ed4956')
                 likeBtn.children[0].setAttribute('d', "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z");
@@ -101,21 +92,36 @@
 				if(feedItem.dataset.post_id == feedCommentAxiosData[i].post_id) {
 					feedCommentUL.children[i].children[0].style.backgroundImage = `url('../data/${feedCommentAxiosData[i].id}/1.jpg')`
 					feedCommentUL.children[i].children[1].innerHTML = feedCommentAxiosData[i].nickname;
-					feedCommentUL.children[i].children[2].innerHTML = feedCommentAxiosData[i].upload_date.split('T')[0];
 					feedCommentUL.children[i].children[3].innerHTML = feedCommentAxiosData[i].comment;
 					feedCommentUL.children[i].dataset.id = feedCommentAxiosData[i].id;
 					feedCommentUL.children[i].dataset.post_id = feedCommentAxiosData[i].post_id;
 					const resultDate = feedCommentAxiosData[i].upload_date.split('T');
 					let hour
+					let day = resultDate[0].split('-');
 					if(new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[3].startsWith('오후')){
+	
 						hour = (parseInt(new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0])+12).toString()
+						if(hour === '24'){
+							hour = (parseInt(hour) - 12).toString();
+						}
 					} else {
-						hour = (new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0]).toString()
+						hour = (new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[4].split(':')[0]).toString();
+						if(parseInt(hour) === 12 || parseInt(hour) < 9 && parseInt(hour) >= 1){
+							day[2] = (parseInt(day[2]) + 1 ).toString()
+							day = day.join('-');
+							resultDate[0] = day
+						}
+						if(hour.length === 1) {
+							hour = '0'+ hour;
+						} else if(hour ==='12'){
+							hour = '00'
+						}
 					}
 					resultDate[1] = new Date(feedCommentAxiosData[i].upload_date).toLocaleString().split(' ')[4]
 					const result = [hour, resultDate[1].split(':')[1],resultDate[1].split(':')[2]]
 					resultDate[1] = result.join(':');
 					const date = resultDate.join('T')
+					feedCommentUL.children[i].children[2].innerHTML = date.split('T')[0];
 					feedCommentUL.children[i].dataset.date = date
 				}
 			}
@@ -140,7 +146,6 @@
 		const likeBtn = getTarget(e.target, 'like-btn');
         const commentDeleteButton = getTarget(e.target, 'comment-delete-button');
         if(commentDeleteButton) {
-            console.log(commentDeleteButton)
             const postId = hidden.value;
             const date = commentDeleteButton.parentNode.dataset.date
             await axios.post('/new_delete_comment', {postId, date});
@@ -216,19 +221,15 @@
 			}
 			listIndex--;
 			feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`
-			// console.log(feedSlideList.style.left)
 		} else if(rightButton) {
 			if(listIndex === feedSlideItems.length-1){
 				return;
 			}
 			listIndex++;
-			console.log(listIndex);
 			feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`
-			console.log(feedSlideList.style.left)
 		} else if(rightBox){
 		}else if(slideBox){
 		}else if(modalBox){
-			// console.log( modalBox.style.opacity)
 			feedSlideList.style.left = 0;
 			listIndex=0;
 			modalBox.style.opacity='0';

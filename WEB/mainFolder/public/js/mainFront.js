@@ -96,7 +96,6 @@
   async function createSlideImage() {
     const postWhole = document.querySelectorAll('.post-whole')
     let img_index = Object.keys(mainAxiosImages).length - 1;
-    console.log(mainAxiosImages);
     for (const imgList in mainAxiosImages) {
       for (let i = 0; i < mainAxiosImages[imgList].length; i++) {
         postWhole[img_index].children[1].firstElementChild.firstElementChild.children[i].style.backgroundImage = `url('../data/${imgList}/${mainAxiosImages[imgList][i]}')`;
@@ -153,7 +152,6 @@
   // comment 데이터 설정
   async function createCommentHTML() {
     const postWhole = document.querySelectorAll('.post-whole')
-    console.log(commentDataAxios);
     
     commentData = await axios.get('/comment_data');
     commentDataAxios = await commentData.data;
@@ -192,7 +190,6 @@
           const postId = commentDataAxios[i].post_id;
           const tempDate = commentDataAxios[i].upload_date.split('T');
           let hour
-          console.log(tempDate)
           if(new Date(commentDataAxios[i].upload_date).toLocaleString().split(' ')[3].startsWith('오후')){
             hour = (parseInt(new Date(commentDataAxios[i].upload_date).toLocaleString().split(' ')[4].split(':')[0])+12).toString()
           } else {
@@ -202,7 +199,6 @@
           const result = [hour, tempDate[1].split(':')[1],tempDate[1].split(':')[2]]
           tempDate[1] = result.join(':');
           const date = tempDate.join('T');
-          console.log(date);
           try{
             await axios.post('/new_delete_comment', { postId, date });
             commentList[i].remove();
@@ -485,7 +481,6 @@
       const data = friendData[0]
       const nickname = await axios.post('/nickData', data);
       const nicknameData = await nickname.data;
-      console.log(friendData[0]);
       for(const name in friendData[0]){
         sideUserImage[x].children[0].children[0].style.backgroundImage = `url('../data/${name}/1.jpg')`;
         recommendInfo[x].children[0].innerHTML = nicknameData[x];
@@ -505,7 +500,6 @@
       mainAxiosID = await mainAxios.id;
       mainAxiosImages = await mainAxios.images;
       mainAxiosPost = await mainAxios.post;
-      console.log(mainAxios);
       likeData  = await axios.get('/like_process');
       likeDataAxios = await likeData.data;
       likeDataAxiosMy = await likeDataAxios.data1;
@@ -542,7 +536,6 @@
         commentContent.className = 'comment-list-content'
         commentDelete.className = 'comment-delete'
         commentDate.className = 'comment-date'
-        console.log(mainAxios);
         commentLink.innerHTML = mainAxios.nick;
         commentContent.innerHTML = comment_content;
         commentDelete.innerHTML = '삭제'

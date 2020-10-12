@@ -1,5 +1,4 @@
 window.addEventListener('load', async ()=>{
-  console.log(document.body.children.length);
   let search
   let searchData
   let main
@@ -15,7 +14,6 @@ window.addEventListener('load', async ()=>{
   }catch(err) {
     await init()
   }
-  console.log(searchData)
   const searchBox = document.querySelector('.search-people-box');
   const searchUlTag = document.querySelector('.search-people-list');
   const navImage = document.querySelector('.user_img');

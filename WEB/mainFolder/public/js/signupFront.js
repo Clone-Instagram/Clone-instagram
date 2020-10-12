@@ -1,7 +1,6 @@
 (async ()=>{
     const userId = await axios.post('/signup_get_id');
     const userIdData = await userId.data;
-    console.log(userIdData);
 
     const signupBox = document.querySelector('.signup-box');
     const toastMessage = document.querySelector('.toast-message');
@@ -25,7 +24,6 @@
         if(e.target.name=='nickname') nickname = e.target;
         if(e.target.name=='password') password = e.target;
         if(id) {
-            console.log(id.value.length)
             for(let i=0; i<userIdData.length; i++){
                 if(userIdData[i].id == id.value) idIsOverlap = true;
             }
@@ -62,7 +60,6 @@
             
         }
         if(nickname) {
-            console.log(nickname.value.length)
             for(let i=0; i<userIdData.length; i++){
                 if(userIdData[i].nickname == nickname.value) nicknameIsOverlap = true;
             }
@@ -95,7 +92,6 @@
                 isAble.password = true;
             }
         }
-        console.log(isAble.id)
         if(isAble.id&&isAble.nickname&&isAble.name&&isAble.password){
             submit.disabled = false;
             submit.style.backgroundColor= 'rgb(113, 184, 255)';
