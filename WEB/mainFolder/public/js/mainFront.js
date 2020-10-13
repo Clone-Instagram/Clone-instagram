@@ -18,7 +18,7 @@
   let likeDataAxiosMy;
   let likeDataAxiosAll;
   let friend;
-  let friendData;
+  let friendData=['0'];
   // 로그아웃 설정
   
   leftWholePage.addEventListener('click', (e)=>{
@@ -467,6 +467,10 @@
     })
   }
   async function setFriendData() {
+    friend = await axios.get('/main_friend');
+    friendData = await friend.data;
+
+    console.log(friendData)
     if(friendData[0].length !== 0){
       
       const sideSticker = document.querySelector('.side-sticker');
@@ -575,11 +579,9 @@
       await operateModal();
       await deletePost()
       await operateLikes();
-      
+
       
     }
-    friend = await axios.get('/main_friend');
-    friendData = await friend.data;
     setFriendData();
     operateFollowing()
     // 게시글 작성 모달
