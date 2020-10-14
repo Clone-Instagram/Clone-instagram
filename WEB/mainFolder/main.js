@@ -453,31 +453,31 @@
       return res.end();
     })
   })
-  app.post('/delete', (req, res) => {
-    const user = req.body;
-    req.session.deletePostId = user;
-    return res.end();
-  });
-  app.post('/delete_process', (req, res, next) => {
-    db.query(`delete from post where post_id = ${req.session.deletePostId.userPostId[1]}`, async (err1, data1) => {
-      if (err1) next(new Error('삭제 실패'));
-      db.query(`delete from post_content where post_id = ${req.session.deletePostId.userPostId[1]}`, async (err2, data2) => {
-        if (err2) next(new Error('삭제 실패'));
-        db.query(`delete from post_comment where post_id = ${req.session.deletePostId.userPostId[1]}`, async (err3, data3) => {
-          if (err3) next(new Error('삭제 실패'));
-          db.query(`delete from post_likes where post_id = ${req.session.deletePostId.userPostId[1]}`, async (err4, data4) => {
-            if (err4) next(new Error('삭제 실패'));
-            const filename = await fs.readdir(`./public/data/${req.session.deletePostId.userPostId[1]}`);
-            for (let i = 0; i < filename.length; i++) {
-              await fs.unlink(`./public/data/${req.session.deletePostId.userPostId[1]}/${filename[i]}`);
-            }
-            await fs.rmdir(`./public/data/${req.session.deletePostId.userPostId[1]}`)
-            return res.end(JSON.stringify(req.session.deletePostId.userPostId[1]));
-          });
-        });
-      });
-    });
-  });
+  // app.post('/delete', (req, res) => {
+  //   const user = req.body;
+  //   req.session.deletePostId = user;
+  //   return res.end();
+  // });
+  // app.post('/delete_process', (req, res, next) => {
+  //   db.query(`delete from post where post_id = ${req.session.deletePostId.userPostId[1]}`, async (err1, data1) => {
+  //     if (err1) next(new Error('삭제 실패'));
+  //     db.query(`delete from post_content where post_id = ${req.session.deletePostId.userPostId[1]}`, async (err2, data2) => {
+  //       if (err2) next(new Error('삭제 실패'));
+  //       db.query(`delete from post_comment where post_id = ${req.session.deletePostId.userPostId[1]}`, async (err3, data3) => {
+  //         if (err3) next(new Error('삭제 실패'));
+  //         db.query(`delete from post_likes where post_id = ${req.session.deletePostId.userPostId[1]}`, async (err4, data4) => {
+  //           if (err4) next(new Error('삭제 실패'));
+  //           const filename = await fs.readdir(`./public/data/${req.session.deletePostId.userPostId[1]}`);
+  //           for (let i = 0; i < filename.length; i++) {
+  //             await fs.unlink(`./public/data/${req.session.deletePostId.userPostId[1]}/${filename[i]}`);
+  //           }
+  //           await fs.rmdir(`./public/data/${req.session.deletePostId.userPostId[1]}`)
+  //           return res.end(JSON.stringify(req.session.deletePostId.userPostId[1]));
+  //         });
+  //       });
+  //     });
+  //   });
+  // });
   app.post('/new_delete', (req, res, next)=>{
     const post = req.body;
     db.query(`delete from post where post_id = ${post.id}`, async (err1, data1) => {

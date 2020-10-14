@@ -341,8 +341,12 @@
       }
     }
     window.addEventListener('resize', () => {
+      const LslideSwitch = document.querySelectorAll('.slide-switch-left');
+      const RslideSwitch = document.querySelectorAll('.slide-switch-right');
       containerWidth = container.clientWidth;
       for (let i = 0; i < postWhole.length; i++) {
+        RslideSwitch[i].style.display = "inline"
+        LslideSwitch[i].style.display="none";
         allPost[i].style.width = `${containerWidth * slideLength[i]}px`;
         allPost[i].style.left = `0px`;
         slideIndex[i] = 0;
