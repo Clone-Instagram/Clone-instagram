@@ -217,10 +217,11 @@
     const userModal_container = document.querySelector('.userModal-container');
     const deletePost = document.querySelector('#delete-post');
     deletePost.addEventListener('click', async () => {
-      const deleteData = await axios.post('delete_process');
+      const userModalBox = document.querySelector('.userModal-box');
+      const deleteData = await axios.post('/new_delete',{id: deletePost.previousElementSibling.value});
       userModal_container.style.display="none";
       for(let i=0; i<postWhole.length; i++) {
-        if(postWhole[i].id.split('-')[1] == deleteData.data){
+        if(postWhole[i].id.split('-')[1] == userModalBox.children[0].value){
           postWhole[i].remove();
         }
       }
@@ -375,6 +376,9 @@
         let userPostId = e.currentTarget.parentNode.parentNode.parentNode.id.split('-');
         await axios.post('/delete', { userPostId });
         if (userPostId[0] === mainAxiosID) {
+          const userModalBox = document.querySelector('.userModal-box');
+          const id = modalSVG[i].parentNode.parentNode.parentNode.id.split('-')[1];
+          userModalBox.children[0].value = id;
           userModal_container.style.display = 'flex';
         } else {
           modal_container.style.display = `flex`;
