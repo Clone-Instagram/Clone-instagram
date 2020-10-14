@@ -1,15 +1,27 @@
 (async ()=>{
-	const feedAxios = await axios.post('/feed_data');
-	const feedAxiosData = await feedAxios.data;
-	await axios.post('/feed_data', {post: feedAxiosData[0]})
+	let feedAxios
+	let feedAxiosData
 	const feedList = document.querySelector('.feed-list');
 	const feedSlideList = document.querySelector('.feed-slide-list');
 	const hidden = document.querySelector('.hidden');
 	const rightFeedList = document.querySelector('.right-feed-list');
 	const likeBtn = document.querySelector('.like-btn');
-
-	
-
+	const init = async () => {
+		try{
+			feedAxios = await axios.post('/feed_data');
+			feedAxiosData = await feedAxios.data;
+		} catch(err){
+			window.location.reload();
+		}
+	}
+	await init();
+	const logoutBtn = document.querySelector('.logout');
+	logoutBtn.addEventListener('click', async () => {
+	  const logout = await axios.get('/logout');
+	  if (logout.data.startsWith('logout')) {
+		location.href = "/";
+	  }
+	})
 	const userImg = document.querySelector('.user_img');
 	userImg.style.backgroundImage = `url('../data/${feedAxiosData.id}/1.jpg')`;
 	

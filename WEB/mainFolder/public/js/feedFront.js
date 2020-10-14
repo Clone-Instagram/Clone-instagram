@@ -120,7 +120,14 @@
             rightFeedContents.children[1].innerHTML = feedItem.dataset.date;
             hiddenPostID.value = feedItem.dataset.post_id
 
+            console.log(searchAxiosData.images[feedItem.dataset.number].length)
             for (let i = 0; i < searchAxiosData.images[feedItem.dataset.number].length; i++) {
+                if(searchAxiosData.images[feedItem.dataset.number].length == 1){
+                    const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+                    const RslideSwitch = document.querySelector('.feed-slide-switch-right');
+                    LslideSwitch.style.display = 'none';
+                    RslideSwitch.style.display = 'none';
+                }
                 feedSlideListWidth = feedSlideContainer.clientWidth * searchAxiosData.images[feedItem.dataset.number].length;
                 feedSlideList.style.width = `${feedSlideListWidth}px`
                 const feedImageItems = document.createElement('li');
@@ -131,7 +138,6 @@
             feedPostModalContainer.style.top = 0;
             feedPostModalContainer.style.opacity = '1';
             feedPostModalContainer.style.zIndex = 20;
-
         }
 
         feedSlideItems = document.querySelectorAll('.feed-slide-items');

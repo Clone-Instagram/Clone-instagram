@@ -341,12 +341,16 @@
       }
     }
     window.addEventListener('resize', () => {
-      const LslideSwitch = document.querySelectorAll('.slide-switch-left');
-      const RslideSwitch = document.querySelectorAll('.slide-switch-right');
       containerWidth = container.clientWidth;
+      
       for (let i = 0; i < postWhole.length; i++) {
-        RslideSwitch[i].style.display = "inline"
-        LslideSwitch[i].style.display="none";
+        if(slideLength[i] == 1) {
+          LslideSwitch[i].style.display="none";
+          RslideSwitch[i].style.display="none";
+        } else {
+          RslideSwitch[i].style.display = "inline"
+          LslideSwitch[i].style.display="none";
+        }
         allPost[i].style.width = `${containerWidth * slideLength[i]}px`;
         allPost[i].style.left = `0px`;
         slideIndex[i] = 0;
@@ -378,7 +382,6 @@
     for (let i = 0; i < postWhole.length; i++) {
       modalSVG[i].addEventListener('click', async (e) => {
         let userPostId = e.currentTarget.parentNode.parentNode.parentNode.id.split('-');
-        await axios.post('/delete', { userPostId });
         if (userPostId[0] === mainAxiosID) {
           const userModalBox = document.querySelector('.userModal-box');
           const id = modalSVG[i].parentNode.parentNode.parentNode.id.split('-')[1];

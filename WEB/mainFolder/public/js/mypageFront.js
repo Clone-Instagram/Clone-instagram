@@ -23,7 +23,13 @@
     }
   }
   await init();
-
+  const logoutBtn = document.querySelector('.logout');
+  logoutBtn.addEventListener('click', async () => {
+    const logout = await axios.get('/logout');
+    if (logout.data.startsWith('logout')) {
+      location.href = "/";
+    }
+  })
 
   let feedSlideItems = []
   const feedList = document.querySelector('.feed-list');
