@@ -106,6 +106,15 @@
       }
     })
   })
+  app.post('/android_mypage', (req, res)=>{
+    const data = req.body;
+    db.query(`select post_id from post where id="${data.name}");`,async (err, data)=>{
+      if(data.length===0){
+        return res.end(JSON.stringify(data));
+      }
+      return res.end(JSON.stringify(data));
+    })
+  })
   app.get('/android_login', (req, res) => {
     db.query(`select id, password from user`, (err, data) => {
       return res.end(JSON.stringify(data));

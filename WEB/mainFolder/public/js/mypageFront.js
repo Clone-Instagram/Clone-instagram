@@ -7,27 +7,22 @@
   let followerAxiosData
   let followAxios
   let followAxiosData
+  const init = async () => {
+    try{
 
-  try {
-    myPageAxios = await axios.post('/mypage');
-    myPageAxiosData = await myPageAxios.data;
-    mainAxios = await axios.get('/main_data');
-    mainAxiosData = await mainAxios.data;
-    followerAxios = await axios.get('/follower_length');
-    followerAxiosData = await followerAxios.data;
-    followAxios = await axios.get('/follow_length');
-    followAxiosData = await followAxios.data;
-  } catch (err) {
-    myPageAxios = await axios.post('/mypage');
-    myPageAxiosData = await myPageAxios.data;
-    mainAxios = await axios.get('/main_data');
-    mainAxiosData = await mainAxios.data;
-    followerAxios = await axios.get('/follower_length');
-    followerAxiosData = await followerAxios.data;
-    followAxios = await axios.get('/follow_length');
-    followAxiosData = await followAxios.data;
+      myPageAxios = await axios.post('/mypage');
+      myPageAxiosData = await myPageAxios.data;
+      mainAxios = await axios.get('/main_data');
+      mainAxiosData = await mainAxios.data;
+      followerAxios = await axios.get('/follower_length');
+      followerAxiosData = await followerAxios.data;
+      followAxios = await axios.get('/follow_length');
+      followAxiosData = await followAxios.data;
+    } catch(err) {
+      window.location.reload()
+    }
   }
-
+  await init();
 
 
   let feedSlideItems = []
