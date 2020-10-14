@@ -118,8 +118,8 @@ body{
 .feed-items{
   margin: 0.55rem;
   display: block;
-  width: 30%;
-  padding-bottom: 33%;
+  width: 28%;
+  padding-bottom: 28%;
   flex-shrink: 0;
   z-index: 10;
   background-position: center;
