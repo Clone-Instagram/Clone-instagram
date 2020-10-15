@@ -8,7 +8,7 @@
   let followAxios
   let followAxiosData
   const init = async () => {
-    try{
+    try {
 
       myPageAxios = await axios.post('/mypage');
       myPageAxiosData = await myPageAxios.data;
@@ -18,7 +18,7 @@
       followerAxiosData = await followerAxios.data;
       followAxios = await axios.get('/follow_length');
       followAxiosData = await followAxios.data;
-    } catch(err) {
+    } catch (err) {
       window.location.reload()
     }
   }
@@ -156,9 +156,18 @@
 
   // 게시글 클릭시 동적으로 이미지 개수 만큼 li 생성
   feedList.addEventListener('click', async (e) => {
+    const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+    const RslideSwitch = document.querySelector('.feed-slide-switch-right');
     const feedItem = getTarget(e.target, 'feed-items');
     if (feedItem) {
       for (let i = 0; i < feedItem.dataset.imageCount; i++) {
+        if(feedItem.dataset.imageCount == 1) {
+          LslideSwitch.style.display = 'none';
+          RslideSwitch.style.display = 'none';
+        } else {
+          LslideSwitch.style.display = 'none';
+          RslideSwitch.style.display = 'inline';
+        }
         const feedSlideItems = document.createElement('li');
         feedSlideItems.className = 'feed-slide-items';
         feedSlideItems.style.backgroundImage = `url('../data/${feedItem.dataset.post_id}/${i + 1}.jpg')`;
@@ -261,7 +270,8 @@
     const rightBox = getTarget(e.target, 'feed-post-right-section');
     const submit = getTarget(e.target, 'right-feed-bottom-submit');
     const likeBtn = getTarget(e.target, 'like-btn');
-
+    const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+    const RslideSwitch = document.querySelector('.feed-slide-switch-right');
     const commentDeleteButton = getTarget(e.target, 'comment-delete-button');
     if (commentDeleteButton) {
       const postId = hidden.value;
@@ -303,6 +313,7 @@
         const rightFeedDate = document.createElement('p');
         const rightFeedComment = document.createElement('p');
         const deleteButton = document.createElement('p');
+        
         deleteButton.className = 'comment-delete-button'
         rightFeedItems.className = 'right-feed-items';
         rightFeedImage.className = 'right-feed-image';
@@ -332,14 +343,28 @@
         return;
       }
       listIndex--;
+      if(listIndex === 0 && feedSlideItems.length !== 1) {
+        LslideSwitch.style.display = 'none'
+        RslideSwitch.style.display = 'inline'
+      } else if ( listIndex < feedSlideItems.length -1) {
+        RslideSwitch.style.display = 'inline'
+      }
       feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`;
     } else if (rightButton) {
       if (listIndex === feedSlideItems.length - 1) {
         return;
       }
       listIndex++;
+      if(listIndex === feedSlideItems.length -1) {
+        RslideSwitch.style.display = 'none'
+        LslideSwitch.style.display = 'inline'
+      } else if(listIndex < feedSlideItems.length -1){
+        LslideSwitch.style.display = 'inline'
+        RslideSwitch.style.display = 'inline'
+      }
       feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`;
-    } else if (rightBox) {
+    } 
+    else if (rightBox) {
     } else if (slideBox) {
     } else if (modalBox) {
       modalBox.style.opacity = '0';
@@ -415,9 +440,21 @@
   })
 
   window.addEventListener('resize', () => {
+    const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+    const RslideSwitch = document.querySelector('.feed-slide-switch-right');
+    if(feedSlideItems.length === 1){
+      LslideSwitch.style.display = 'none';
+      RslideSwitch.style.display = 'none';
+
+    }else {
+      LslideSwitch.style.display = 'none';
+      RslideSwitch.style.display = 'inline';
+    }
+
     feedSlideListWidth = feedSlideContainer.clientWidth * feedSlideItems.length;
     feedSlideList.style.width = `${feedSlideListWidth}px`;
     feedSlideList.style.left = 0;
     listIndex = 0;
+    
   })
 })()

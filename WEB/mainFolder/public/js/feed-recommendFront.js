@@ -64,6 +64,18 @@
 				feedSlideItems.style.backgroundImage=`url('../data/${feedAxiosData.post[feedItem.dataset.index].post_id}/${feedAxiosData.images[feedItem.dataset.index][i]}')`
 				// ${feedAxiosData.post[feedItem.dataset.index].post_id}은 몇 번째 게시물인지/ ${feedAxiosData.images[feedItem.dataset.index][i]}은 몇 번째 게시물의 1.jpg 2.jpg, 3.jpg
 				feedSlideList.appendChild(feedSlideItems);
+
+				if (feedAxiosData.images[feedItem.dataset.index].length == 1) {
+                    const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+                    const RslideSwitch = document.querySelector('.feed-slide-switch-right');
+                    LslideSwitch.style.display = 'none';
+                    RslideSwitch.style.display = 'none';
+                }else {
+                    const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+                    const RslideSwitch = document.querySelector('.feed-slide-switch-right');
+                    LslideSwitch.style.display = 'none';
+                    RslideSwitch.style.display = 'inline';
+                }
 			}
 			const rightFeedHeader = document.querySelector('.right-feed-header');
 			rightFeedHeader.children[0].style.backgroundImage=`url('../data/${feedItem.dataset.id}/1.jpg')` // feed 올린사람의 이미지
@@ -156,6 +168,8 @@
 		const rightBox = getTarget(e.target, 'feed-post-right-section');
 		const submit = getTarget(e.target, 'right-feed-bottom-submit');
 		const likeBtn = getTarget(e.target, 'like-btn');
+		const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+		const RslideSwitch = document.querySelector('.feed-slide-switch-right');
         const commentDeleteButton = getTarget(e.target, 'comment-delete-button');
         if(commentDeleteButton) {
             const postId = hidden.value;
@@ -227,19 +241,33 @@
 			}
 		}
 
-		if(leftButton){
-			if(listIndex === 0){
-				return;
-			}
-			listIndex--;
-			feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`
-		} else if(rightButton) {
-			if(listIndex === feedSlideItems.length-1){
-				return;
-			}
-			listIndex++;
-			feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`
-		} else if(rightBox){
+		if (leftButton) {
+            if (listIndex === 0) {
+                return;
+            }
+            listIndex--;
+            if (listIndex === 0 && feedSlideItems.length !== 1) {
+                LslideSwitch.style.display = 'none'
+                RslideSwitch.style.display = 'inline'
+            } else if (listIndex < feedSlideItems.length - 1) {
+                RslideSwitch.style.display = 'inline'
+            }
+            feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`;
+        } else if (rightButton) {
+            if (listIndex === feedSlideItems.length - 1) {
+                return;
+            }
+            listIndex++;
+            if (listIndex === feedSlideItems.length - 1) {
+                RslideSwitch.style.display = 'none'
+                LslideSwitch.style.display = 'inline'
+            } else if (listIndex < feedSlideItems.length - 1) {
+                LslideSwitch.style.display = 'inline'
+                RslideSwitch.style.display = 'inline'
+            }
+            feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`;
+        }
+		else if(rightBox){
 		}else if(slideBox){
 		}else if(modalBox){
 			feedSlideList.style.left = 0;
@@ -280,6 +308,17 @@
         }
     })
 	window.addEventListener('resize',()=>{
+		const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+        const RslideSwitch = document.querySelector('.feed-slide-switch-right');
+        if (feedSlideItems.length === 1) {
+            LslideSwitch.style.display = 'none';
+            RslideSwitch.style.display = 'none';
+
+        } else {
+            LslideSwitch.style.display = 'none';
+            RslideSwitch.style.display = 'inline';
+        }
+
 		feedSlideListWidth = feedSlideContainer.clientWidth * feedSlideItems.length;
 		feedSlideList.style.width = `${feedSlideListWidth}px`
 		feedSlideList.style.left = 0;

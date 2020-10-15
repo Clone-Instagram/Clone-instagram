@@ -40,6 +40,8 @@
         feedItems.style.backgroundImage = `url('../data/${searchAxiosData.post[i].post_id}/1.jpg')`
     }
     feedList.addEventListener('click', async (e) => {
+        const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+        const RslideSwitch = document.querySelector('.feed-slide-switch-right');
         const feedItem = getTarget(e.target, 'feed-items')
         if (feedItem) {
             const commentAxios = await axios.post('/feed_comment_data', { postID: feedItem.dataset.post_id })
@@ -122,11 +124,16 @@
 
             console.log(searchAxiosData.images[feedItem.dataset.number].length)
             for (let i = 0; i < searchAxiosData.images[feedItem.dataset.number].length; i++) {
-                if(searchAxiosData.images[feedItem.dataset.number].length == 1){
+                if (searchAxiosData.images[feedItem.dataset.number].length == 1) {
                     const LslideSwitch = document.querySelector('.feed-slide-switch-left');
                     const RslideSwitch = document.querySelector('.feed-slide-switch-right');
                     LslideSwitch.style.display = 'none';
                     RslideSwitch.style.display = 'none';
+                }else {
+                    const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+                    const RslideSwitch = document.querySelector('.feed-slide-switch-right');
+                    LslideSwitch.style.display = 'none';
+                    RslideSwitch.style.display = 'inline';
                 }
                 feedSlideListWidth = feedSlideContainer.clientWidth * searchAxiosData.images[feedItem.dataset.number].length;
                 feedSlideList.style.width = `${feedSlideListWidth}px`
@@ -146,6 +153,8 @@
     feedSlideList.style.left = 0;
     let listIndex = 0;
     feedPostModalContainer.addEventListener('click', async (e) => {
+        const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+        const RslideSwitch = document.querySelector('.feed-slide-switch-right');
         const leftButton = getTarget(e.target, 'feed-slide-switch-left');
         const rightButton = getTarget(e.target, 'feed-slide-switch-right');
         const modalBox = getTarget(e.target, 'feed-post-modal-container');
@@ -231,14 +240,28 @@
                 return;
             }
             listIndex--;
-            feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`
+            if (listIndex === 0 && feedSlideItems.length !== 1) {
+                LslideSwitch.style.display = 'none'
+                RslideSwitch.style.display = 'inline'
+            } else if (listIndex < feedSlideItems.length - 1) {
+                RslideSwitch.style.display = 'inline'
+            }
+            feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`;
         } else if (rightButton) {
             if (listIndex === feedSlideItems.length - 1) {
                 return;
             }
             listIndex++;
-            feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`
-        } else if (rightBox) {
+            if (listIndex === feedSlideItems.length - 1) {
+                RslideSwitch.style.display = 'none'
+                LslideSwitch.style.display = 'inline'
+            } else if (listIndex < feedSlideItems.length - 1) {
+                LslideSwitch.style.display = 'inline'
+                RslideSwitch.style.display = 'inline'
+            }
+            feedSlideList.style.left = `-${feedSlideContainer.clientWidth * listIndex}px`;
+        }
+        else if (rightBox) {
         } else if (slideBox) {
         } else if (modalBox) {
             modalBox.style.opacity = '0';
@@ -295,6 +318,17 @@
     // 댓글삭제 끝
 
     window.addEventListener('resize', () => {
+        const LslideSwitch = document.querySelector('.feed-slide-switch-left');
+        const RslideSwitch = document.querySelector('.feed-slide-switch-right');
+        if (feedSlideItems.length === 1) {
+            LslideSwitch.style.display = 'none';
+            RslideSwitch.style.display = 'none';
+
+        } else {
+            LslideSwitch.style.display = 'none';
+            RslideSwitch.style.display = 'inline';
+        }
+
         feedSlideListWidth = feedSlideContainer.clientWidth * feedSlideItems.length;
         feedSlideList.style.width = `${feedSlideListWidth}px`
         feedSlideList.style.left = 0;
