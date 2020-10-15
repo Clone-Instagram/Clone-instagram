@@ -66,3 +66,9 @@ window.addEventListener('load', async ()=>{
   }
 })
 
+document.querySelector('.DM').addEventListener('click', async () => {
+  const logout = await axios.get('/logout');
+  if (logout.data.startsWith('logout')) {
+    location.href = "/";
+  }
+})

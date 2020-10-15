@@ -316,7 +316,12 @@
         }
     })
     // 댓글삭제 끝
-
+    document.querySelector('.DM').addEventListener('click', async () => {
+        const logout = await axios.get('/logout');
+        if (logout.data.startsWith('logout')) {
+          location.href = "/";
+        }
+      })
     window.addEventListener('resize', () => {
         const LslideSwitch = document.querySelector('.feed-slide-switch-left');
         const RslideSwitch = document.querySelector('.feed-slide-switch-right');
