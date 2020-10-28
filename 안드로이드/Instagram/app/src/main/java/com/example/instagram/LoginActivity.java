@@ -2,11 +2,14 @@ package com.example.instagram;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
@@ -16,9 +19,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.instagram.navigation.DetailViewFragment;
+import com.example.instagram.navigation.UserFragment;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -60,8 +66,10 @@ public class LoginActivity extends AppCompatActivity {
     Button facebook_login1;
     Button regist;
     Button login_btn;
-    int profile_Image;
-    Button pass;
+
+    Fragment userFragment = new UserFragment();
+
+    String nick;
     private static final String TAG = "MainActivity";
 
     public void onBackPressed() {
@@ -89,7 +97,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
 
         facebook_login1 = (Button) findViewById(R.id.facebook_login);
         facebook_login1.setOnClickListener(new View.OnClickListener() {
@@ -217,23 +224,32 @@ public class LoginActivity extends AppCompatActivity {
                 JSONArray jarray = new JSONArray(result);
                 String id = null;
                 String password = null;
+                String nickname = null;
                 String[] arrayID = new String[jarray.length()];
                 String[] arrayPassword = new String[jarray.length()];
+                String[] arrayNickname = new String[jarray.length()];
                 Log.d(TAG, "@@@@@@@: "+result);
                 for (int i = 0; i < jarray.length(); i++) {
                     JSONObject jObject = jarray.getJSONObject(i);
 
                     id = jObject.optString("id");
                     password = jObject.optString("password");
+                    nickname = jObject.optString("nickname");
 
                     arrayID[i] = id;
                     arrayPassword[i] = password;
+                    arrayNickname[i] = nickname;
 
                         if((input_Id.getText().toString().equals(arrayID[i])) && (input_pw.getText().toString().equals(arrayPassword[i]))) {
                             Log.d(TAG, "결과값 " + arrayID[i]+":"+arrayPassword[i]);
 
+                            nick = arrayNickname[i];
+
+                            Log.d(TAG, "onPostExecute: nick" + nick);
+
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.putExtra("name",input_Id.getText().toString());
+                            intent.putExtra("nickname", nick.toString());
                             startActivity(intent);
                         }
                 }

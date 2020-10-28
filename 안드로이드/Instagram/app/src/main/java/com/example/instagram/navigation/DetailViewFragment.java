@@ -1,28 +1,29 @@
 package com.example.instagram.navigation;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.example.instagram.MainData;
 import com.example.instagram.R;
+//import com.example.instagram.ViewpagerAdapter;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +47,7 @@ public class DetailViewFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
 
     MainPictureAsyncTask task2;
-    Bitmap bmImg1;
+    Bitmap[] bmImg1 = new Bitmap[2];
     String name;
     int mainDataLength=0;
     String[] arrayID;
@@ -55,36 +56,52 @@ public class DetailViewFragment extends Fragment {
     String[] arrayContent;
     int[] arrayImages;
     String[] arrayUploadDate;
+    Bitmap[] arrImagers2;
+//    ViewpagerAdapter adapter;
 
     int i;
 
-
+    public static Bitmap StringToBitmap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_detail, container, false);
 
-            recyclerView = (RecyclerView) view.findViewById(R.id.detailviewfragment);
-            linearLayoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            arrayList = new ArrayList<>();
-            mAdapter = new RecyclerViewAdapter(arrayList);
-            recyclerView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
+        recyclerView = (RecyclerView) view.findViewById(R.id.detailviewfragment);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        arrayList = new ArrayList<>();
+        mAdapter = new RecyclerViewAdapter(arrayList);
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
-            //번들 안의 텍스트 불러오기
-            name = getArguments().getString("name");
+           /* ViewPager viewPager = (ViewPager) getView().findViewById(R.id.post_image);
+            adapter = new ViewpagerAdapter(getContext(),bmImg1);
+            viewPager.setAdapter((PagerAdapter) adapter);*/
 
-            System.out.println(name + "^^^^");
+        //번들 안의 텍스트 불러오기
+        name = getArguments().getString("name");
 
-            new JSONTask().execute("http://13.125.61.188:8080/android_main2");//AsyncTask 시작시킴
-
-            String imgUrl2 = "http://13.125.61.188:8080/data/" + 1 + "/" + 1 + ".jpg";
+        System.out.println(name + "^^^^");
+        String[] imgUrl2 = new String[2];
+        new JSONTask().execute("http://13.125.61.188:8080/android_main");//AsyncTask 시작시킴
+        for(int i=1; i<=2; i++){
+            imgUrl2[i-1] = "http://13.125.61.188:8080/data/" + i + "/" + 1 + ".jpg";
             task2 = new MainPictureAsyncTask();
-            task2.execute(imgUrl2);
-            return view;
 
+        }
+        task2.execute(imgUrl2);
+        return view;
     }
 
     class JSONTask extends AsyncTask<String, String, String> {
@@ -200,6 +217,7 @@ public class DetailViewFragment extends Fragment {
                     arrayPostID[i] = post_id; // 어떠한 포스트 아이디
                     arrayImages[i] = images; // 포스트에 들어갈 이미지 개수 ex)3 => 1.jpg, 2.jpg, 3.jpg
                     arrayUploadDate[i] = uploadDate;
+                    Log.d("check","log "+arrayID[i]+arrayContent[i]+arrayNickname[i]+arrayPostID[i]+arrayImages[i]+arrayUploadDate[i]);
                 }
             }
             catch (JSONException e) {
@@ -208,20 +226,26 @@ public class DetailViewFragment extends Fragment {
         }
     }
 
-    class MainPictureAsyncTask extends AsyncTask<String, Integer,Bitmap>{
+    class MainPictureAsyncTask extends AsyncTask<String[], Integer, Bitmap[]> {
 
         @Override
-        protected Bitmap doInBackground(String... urls) {
+        protected Bitmap[] doInBackground(String[]... urls) {
             // TODO Auto-generated method stub
+
             try{
-                URL myFileUrl = new URL(urls[0]);
-                HttpURLConnection conn = (HttpURLConnection)myFileUrl.openConnection();
-                conn.setDoInput(true);
-                conn.connect();
+                URL myFileUrl[] = new URL[2];
+                HttpURLConnection[] conn = new HttpURLConnection[2];
+                InputStream[] is = new InputStream[2];
+                for(int i=0; i<2; i++){
+                    myFileUrl[i] = new URL(urls[0][i]);
+                    conn[i] = (HttpURLConnection)myFileUrl[i].openConnection();
+                    conn[i].setDoInput(true);
+                    conn[i].connect();
+                    is[i] = conn[i].getInputStream();
+                    bmImg1[i] = BitmapFactory.decodeStream(is[i]);
+                }
 
-                InputStream is = conn.getInputStream();
-
-                bmImg1 = BitmapFactory.decodeStream(is);
+                //bmImg1 = new Bitmap[]{ BitmapFactory.decodeStream(is)};
 
             }catch(IOException e){
                 e.printStackTrace();
@@ -229,49 +253,54 @@ public class DetailViewFragment extends Fragment {
             return bmImg1;
         }
 
-        protected void onPostExecute(Bitmap img){
+        protected void onPostExecute(Bitmap[] img){
 
-            Log.d("image","이미지 : "+ arrayImages[1]);
+//            Log.d("image","이미지 : "+ arrayImages[0]);
             // post_image.setImageBitmap(bmImg1);
-            Log.i(" sss","arrayNickname:   "+arrayNickname[0]+arrayNickname[1]+arrayNickname[2]);
+            Log.i(" sss","arrayNickname:   "+arrayNickname[0]);
+            for(int i=0; i<2; i++)
+            {
+                MainData mainData = new MainData(bmImg1, arrayNickname, arrayContent, arrayUploadDate);
+                Log.i(" sss", String.valueOf(bmImg1));
+                arrayList.add(mainData);
+                mAdapter.notifyDataSetChanged();
+            }
 
-            MainData mainData = new MainData(bmImg1, arrayNickname[1], arrayContent[1], arrayUploadDate[1]);
-            Log.i(" sss",mainData.getPost_user_name().toString());
-            arrayList.add(mainData);
-            mAdapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();
         }
     }
 
-
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-            private ArrayList<MainData> arrayList;
+        private ArrayList<MainData> arrayList;
 
         public RecyclerViewAdapter(ArrayList<MainData> arrayList) {
-                this.arrayList = arrayList;
-            }
+            this.arrayList = arrayList;
+        }
 
-            @NonNull
-            @Override
-            public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post, parent, false);
-                RecyclerViewAdapter.ViewHolder viewHolder = new RecyclerViewAdapter.ViewHolder(view);
-                return viewHolder;
-            }
+        @NonNull
+        @Override
+        public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post, parent, false);
+            RecyclerViewAdapter.ViewHolder viewHolder = new RecyclerViewAdapter.ViewHolder(view);
+            return viewHolder;
+        }
 
-            @Override
-            public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
-                holder.post_image.setImageBitmap(arrayList.get(position).getPost_image());
-                holder.post_user_name.setText(arrayList.get(position).getPost_user_name());
-                holder.post_text.setText(arrayList.get(position).getPost_text());
-                holder.sysdata.setText(arrayList.get(position).getSysdata());
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
+            Log.i("vhwltus", ""+position);
+            holder.post_image.setImageBitmap(arrayList.get(0).getPost_image()[position]);
+            holder.post_user_name.setText(arrayList.get(0).getPost_user_name()[position]);
+            holder.post_text.setText(arrayList.get(0).getPost_text()[position]);
+            holder.sysdata.setText(arrayList.get(0).getSysdata()[position]);
         }
 
         @Override
         public int getItemCount() {
-
             // return arrayList.size();
-            return (null !=arrayList ? arrayList.size() : 0);
+            if(arrayList.size() != 0)
+                return (null !=arrayList.get(0).getPost_user_name() ? arrayList.get(0).getPost_user_name().length : 0);
+            else return 0;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

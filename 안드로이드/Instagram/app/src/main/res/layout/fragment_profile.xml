@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/topPanel1"
@@ -50,9 +49,9 @@
         <ImageView
             android:id="@+id/profile_Image2"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_marginLeft="25dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp">
         </ImageView>
 
         <TextView
@@ -144,11 +143,20 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/line4"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/mid_panel"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorDivision">
+        android:background="@color/colorDivision"
+        android:orientation="horizontal">
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mypost"
+        android:layout_below="@id/line4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>

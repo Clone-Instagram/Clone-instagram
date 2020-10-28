@@ -33,7 +33,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddPhotoActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+                  android:windowSoftInputMode="adjustPan"
+            />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

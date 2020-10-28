@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 import com.example.instagram.navigation.AddFragment;
@@ -31,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
     Fragment userFragment = new UserFragment();
 
     String imgurl;
-
     Menu menu;
     String name;
+    String nick;
 
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -49,14 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent(); //데이터 수신
         name = intent.getExtras().getString("name"); //String형
+        nick = intent.getExtras().getString("nickname");
 
         Bundle bundle = new Bundle();
         bundle.putString("name",name);
         detailViewFragment.setArguments(bundle);
 
-
         System.out.println(name + "#####");
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_Navigation);
         menu = bottomNavigationView.getMenu();
@@ -104,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_account:
+                        Bundle bundle = new Bundle();
+                        bundle.putString("nickname", nick);
+                        userFragment.setArguments(bundle);
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_content, userFragment).commit();
                         menuItem.setIcon(R.drawable.profile2);
                         menu.findItem(R.id.action_home).setIcon(R.drawable.home);
