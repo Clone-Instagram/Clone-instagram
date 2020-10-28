@@ -29,11 +29,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <ImageView
+
+        <ImageView
         android:id="@+id/post_image"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="350dp"/>
+
     </LinearLayout>
 
     <RelativeLayout
